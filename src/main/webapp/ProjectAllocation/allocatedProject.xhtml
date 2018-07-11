@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link href="resources/css/projectAllocationCss.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <h:head>
+        <title>Project Allocation</title>
+    </h:head>
+    <h:body>
+        <ui:include src="../header_admin.xhtml" />
+        <div class="col-xs-12">
+            <h1>Allocated Project</h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>Allocated Project</h1>
+                </div>
+            </div>
+            <div cllass="row">
+                <div class="col-xs-12">
+                    <h:form id="allocatedProjectForm">
+                        <h:dataTable border="1" value="#{allocationController.allocatedProjectList}" var="p" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputLabel value="Project Title"/>
+                                </f:facet>
+                                <h:outputText value="#{p.finalProject.idea.title}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Allocated To (Student)"/>
+                                </f:facet>
+                                <h:outputText value="#{p.student.studentNumber} , #{p.student.person.fullName}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputLabel value="Allocated To (Supervisor)"/>
+                                </f:facet>
+                                <h:outputText value="No Supersivor Assigned Yet" rendered="#{p.staffs.staffnumber == null}"/>
+                                <h:outputText value="#{p.staffs.staffnumber} , #{p.staffs.person.fullName}" rendered="#{p.staffs.staffnumber != null}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputLabel value="Edit"/>
+                                </f:facet>
+                                <h:commandButton value="Edit" action="#{allocationController.editAllocatedProject(p)}">
+                                    <f:ajax render="allocatedProjectForm"/>
+                                </h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>
+

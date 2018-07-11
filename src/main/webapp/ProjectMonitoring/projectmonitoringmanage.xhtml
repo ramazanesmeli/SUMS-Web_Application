@@ -1,0 +1,425 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <div class="row">
+        <ui:composition template="/WEB-INF/Template.xhtml">
+
+
+            <ui:define name="Content">
+
+                <h:head>
+                    <meta charset="utf-8"></meta>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+                    <script src="../resources/js/jquery.datetimepicker.full.min.js" type="text/javascript"></script> 
+                    <link href="../resources/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+
+                </h:head>
+                <h:body>
+
+                    <div class="row">
+                        <div class="row"> <h2 class="text-center text-info"> Milestone Management Page</h2></div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <!--beginning of selecting project --> 
+                            <h:form  id='form1'>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-3"> <h:outputLabel class=" text-info h3" value="Select Staff"></h:outputLabel></div> 
+                                    <h:selectOneMenu class="btn btn-lg btn-default col-md-4" value="#{projectMonitoringManagement.selectedid}" onchange="submit()"
+                                                     valueChangeListener="#{projectMonitoringManagement.staffCodeChanged}">
+                                        <f:selectItem itemLabel="Select a Staff" itemValue="#{-1}"
+                                                      noSelectionOption="true" />
+                                        <f:selectItems value="#{projectMonitoringManagement.allstaf}" var="c"
+                                                       itemLabel="#{c.person.forername } #{c.person.surname} " itemValue="#{c.id}" > </f:selectItems>
+
+                                    </h:selectOneMenu> 
+
+                                </div>
+                            </h:form>
+
+                            <!--End of selecting project --> 
+                            <!--start of listing Projects of staff as a supervisor--> 
+                            <c:if test="#{projectMonitoringManagement.selectedstaff.finalProject.size()>0 and projectMonitoringManagement.selectedid ne -1}">
+
+                                <h:form  id='form2'>
+                                    <h:panelGroup id='projectlist'>
+                                        <div class="row">
+                                            <h:dataTable class="table table-responsive" value="#{ projectMonitoringManagement.selectedstaff.finalProject}" var="m" border="1">
+
+                                                <f:facet name="header">
+                                                    <h1 class="text-center text-success">Your Projects</h1>
+                                                    <h:outputLabel  class="text" rendered="#{projectMonitoringManagement.selectedstaff.isSupervisor}">Your Role: <a class="text-danger">Supervisor</a>  Cohort Name :<a class="text text-danger"> #{projectMonitoringManagement.selectedstaff.person.cohort.title} </a>  </h:outputLabel>
+                                                    <span></span>
+                                                    <br></br>
+                                                    <h:outputLabel  class="text" rendered="#{projectMonitoringManagement.selectedstaff.isCoordinator }">Your Role : <a class="text-danger">Coordinator</a> of <a class="text text-danger"> #{projectMonitoringManagement.selectedstaff.person.cohort.title} </a> </h:outputLabel>
+                                                </f:facet>
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText class="btn-group-lg" value="Project Description" />
+                                                    </f:facet>
+                                                    <h:outputText value=" #{m.idea.title}" />
+                                                </h:column>
+
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Edit Milestones" />
+                                                    </f:facet>
+                                                    <h:commandButton id="milestonedetailbutton" class='btn-lg btn-danger' value="Detail" action="#{projectMonitoringManagement.selectedProject(m)}"  >
+                                                    </h:commandButton>
+
+                                                </h:column>
+
+                                            </h:dataTable>
+                                        </div>
+                                    </h:panelGroup>
+                                    <!--End of listing Projects of staff --> 
+                                </h:form>
+                            </c:if>
+                            <h:panelGroup id='projectlistd' rendered="#{projectMonitoringManagement.selectedid eq -1}">
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-5"><h1 class="text-danger text-center"> Select a Staff !</h1></div>
+
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup id='projectlist' rendered="#{projectMonitoringManagement.selectedstaff.finalProject.size() lt 1 and projectMonitoringManagement.selectedid ne -1 }">
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-5"><h1 class="text-danger text-center">  Assigned project not found !</h1></div>
+
+                                </div>
+                            </h:panelGroup>
+                            <h:form  id='form3'>
+                                <c:if test="#{projectMonitoringManagement.milestones.size()>0}">
+                                    <!--List of Milestones -->
+                                    <h:panelGroup id='milestonelist'>
+                                        <div class="row"> 
+                                            <h:dataTable class="table table-responsive" value="#{projectMonitoringManagement.milestones}" var="mils" border="1" id="mil">
+
+                                                <f:facet name="header" >
+                                                    <div class="nav-tabs">
+                                                        <h1 class="text-center text-success ">Selected Project Milestones</h1>
+                                                    </div>
+                                                </f:facet>
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText class="btn-group-lg" value="Milestone Description" />
+                                                    </f:facet>
+                                                    <h:outputText value="#{mils.description}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText class="btn-group-lg" value="Milestone Status" />
+                                                    </f:facet>
+                                                    <h:outputLabel  class ="alert-danger" value="#{mils.status} (Late)" rendered="#{mils.status!='Submitted' and mils.dueDate.before(projectMonitoringManagement.currentDate)}"  />
+                                                    <h:outputLabel  class ="alert-success" value="#{mils.status}" rendered="#{mils.status=='Submitted'}"  />
+                                                    <h:outputLabel  class ="alert-info" value="#{mils.status} " rendered="#{mils.status!='Submitted' and mils.dueDate.after(projectMonitoringManagement.currentDate)}"  />
+                                                </h:column>
+
+                                                <h:column>
+                                                    <f:facet name="header">
+
+                                                    </f:facet>
+                                                    <h:commandButton id="mdetail" class='btn btn-sm btn-info btn-group-justified' value="Detail" action="#{projectMonitoringManagement.selectMilestone(mils)}">
+                                                        <f:ajax execute="@form" render="form4 form5 form6" ></f:ajax>
+                                                    </h:commandButton>
+                                                    <div class="row"></div>
+                                                    <h:commandButton id="delete" class="btn btn-sm btn-danger btn-group-justified" value="Delete" action="#{projectMonitoringManagement.deleteMilestone(mils)}" onclick="return confirm(' Are You Sure to Delete Milestone: #{projectMonitoringManagement.selectedmilestone.description}')" > 
+                                                        <f:ajax execute="@form" render="form4 form3 form6" ></f:ajax>
+                                                    </h:commandButton>
+                                                </h:column>
+
+                                            </h:dataTable> 
+                                        </div>
+                                    </h:panelGroup> 
+                                </c:if> 
+                                <h:panelGroup  rendered="#{projectMonitoringManagement.milestones.size() lt 1 and projectMonitoringManagement.projectselected}">
+                                    <div class="row">
+                                        <h1 class="text-danger text-center"> No Milestone found !</h1>
+                                    </div>
+                                </h:panelGroup>
+                                <c:if test="#{projectMonitoringManagement.projectselected}">
+                                    <h:panelGroup>
+                                        <div class="row"> 
+                                            <h:dataTable class="table table-responsive "  border="1">
+
+                                                <f:facet name="header">
+                                                    <h:commandButton id="addnewm" class="btn btn-lg btn-primary btn-group-justified" action="#{projectMonitoringManagement.newMilestoneselected()}" value="Add New Milestone">
+                                                        <f:ajax execute="@form" render="form5 form4 form6" ></f:ajax>
+
+                                                    </h:commandButton>
+                                                </f:facet>
+                                            </h:dataTable>
+                                        </div>
+                                    </h:panelGroup>
+                                </c:if>
+                                <!--End of Listing of Milestones -->
+                            </h:form>
+
+
+                            <h:form  id='form4' >
+                                <!--Edit of selected Milestone -->
+                                <h:panelGroup id='editmilestone' rendered="#{projectMonitoringManagement.milestoneselected}">
+                                    <div class="row">
+                                        <div class="col-md-4"> <h:outputLabel id="kkk" class='text-capitalize' value="Milestone Description"></h:outputLabel></div>
+                                        <div class="row"> 
+                                            <div class="col-md-3"><h:inputText id="mtitle" value="#{projectMonitoringManagement.selectedmilestone.description}" label="mtitle" required="true"></h:inputText>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"> </div>
+                                        <div class="col-md-6">
+                                            <h:messages for="mtitle" class="text-danger">Value is required for this field</h:messages>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel value="Activated date"></h:outputLabel> </div>
+                                        <div class="row">
+                                            <div class="col-md-4" >
+
+                                                <h:inputText value="#{projectMonitoringManagement.selectedmilestone.activeDate}"  id="activeDatem" required="true" label="activeDatem" >
+                                                    <f:convertDateTime pattern="dd-MM-yyyy HH:mm"  />
+                                                </h:inputText>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4"> </div>
+                                            <div class="col-md-6">
+                                                <h:messages for="activeDatem" class="text-danger text-nowrap">(dd-MM-yyyy hh:mm)</h:messages>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel value="Due date"></h:outputLabel> </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h:inputText value="#{projectMonitoringManagement.selectedmilestone.dueDate}" id="duedate" required='true' label="duedate"  >
+                                                    <f:convertDateTime pattern="dd-MM-yyyy HH:mm"  />
+                                                </h:inputText> 
+
+                                            </div> 
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4"> </div>
+                                            <div class="col-md-6">
+                                                <h:messages for="duedate" class="text-danger text-nowrap">(dd-MM-yyyy hh:mm)</h:messages>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel value="Status"></h:outputLabel> </div>
+                                        <div class="col-md-3">
+                                            <h:outputLabel  class ="alert-danger" value="#{projectMonitoringManagement.selectedmilestone.status}" rendered="#{projectMonitoringManagement.selectedmilestone.status!='Submitted'}"  />
+                                            <h:outputLabel  class ="alert-success" value="#{projectMonitoringManagement.selectedmilestone.status}" rendered="#{projectMonitoringManagement.selectedmilestone.status=='Submitted'}"  />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel value="Submitted date" rendered="#{projectMonitoringManagement.selectedmilestone.status=='Submitted'}" ></h:outputLabel> </div>
+                                        <div class="col-md-3"><h:outputLabel value="#{projectMonitoringManagement.selectedmilestone.submittedDate}" rendered="#{projectMonitoringManagement.selectedmilestone.status=='Submitted'}" >
+                                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                                            </h:outputLabel></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel value="Student Comment"></h:outputLabel> </div>
+                                        <div class="col-md-3"><h:outputLabel  class ="text-info" value="#{projectMonitoringManagement.selectedmilestone.comment}"   />
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h:commandButton id="downloadbutton" class="col-md-3 btn-sm btn-primary" value="Download uploaded file" action="#{projectMonitoringManagement.dowloadfile}" rendered="#{projectMonitoringManagement.selectedmilestone.filePath != null}">      
+                                        </h:commandButton>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel value="Mark"></h:outputLabel> </div>
+                                        <div class="col-md-3">
+                                            <h:outputLabel  class ="text-info" value="#{projectMonitoringManagement.selectedmilestone.mark}" rendered="#{projectMonitoringManagement.selectedmilestone.status eq 'Not Submitted'}"   />
+                                            <h:inputText  class ="text-info" 
+                                                          value="#{projectMonitoringManagement.selectedmilestone.mark}"
+                                                          rendered="#{projectMonitoringManagement.selectedmilestone.status eq 'Submitted' 
+                                                                      and projectMonitoringManagement.findstaffbyprojectid()}" 
+                                                          converterMessage="Please enter digits only."/>
+                                                          
+
+                                        </div>
+                                    </div>
+                                    <h:panelGroup rendered="#{projectMonitoringManagement.milestoneselected}">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <h:commandButton id="update" class="btn btn-lg btn-success btn-group-justified" value="Update" action="#{projectMonitoringManagement.updateMilestone()}"> 
+                                                    <f:ajax execute="form4:editmilestone" render="form3 form4 form5 form6" ></f:ajax>
+                                                </h:commandButton>
+                                            </div>
+                                            <div class="col-md-3">
+
+                                            </div>
+                                        </div>
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+                                <!--End of Editing of selected Milestone -->
+                                <!--List of selected Milestone' feedbacks -->
+                            </h:form>
+                            <h:form id="form6">
+                                <h:panelGroup id="feedback"> 
+                                    <c:if test="#{projectMonitoringManagement.selectedmilestone.status eq 'Submitted' and projectMonitoringManagement.milestoneselected}" >
+                                        <div class="row">
+                                            <div class="row"><h:outputLabel value="FeedBacks"></h:outputLabel> </div>
+                                            <div class="row">
+                                                <h:dataTable id="commentlist" class="table table-striped" value="#{projectMonitoringManagement.feedbacks}" var="m" border="1">
+
+                                                    <h:column class="col-md-6">
+                                                        <f:facet name="header">
+                                                            <h:outputText class="btn-group-lg" value="feedBack by" />
+                                                        </f:facet>
+                                                        <h:outputText value="#{m.staff.person.personStatus.name} #{m.staff.person.forername} #{m.staff.person.surname}" />
+                                                    </h:column>
+
+                                                    <h:column class="col-md-6">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Comment" />
+                                                        </f:facet>
+                                                        <h:outputText value="#{m.comment}" />
+                                                    </h:column>
+                                                    <h:column class="col-md-6">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Comment date" />
+                                                        </f:facet>
+                                                        <h:outputText value="#{m.commentDate}" > <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                                                        </h:outputText>
+                                                    </h:column>
+
+                                                    <h:column class="col-md-6">
+                                                        <f:facet name="header">
+                                                            <h:outputText value="Delete" />
+                                                        </f:facet>
+                                                        <h:commandButton value="Delete" class="btn-sm btn-danger btn-group-justified" action="#{projectMonitoringManagement.DeleteComment(m)}" onclick="return confirm(' Are you sure to delete comment: #{m.comment}')">
+                                                            <f:ajax execute="form3 form6:commentlist" render="form4 form3 form6" ></f:ajax>
+                                                        </h:commandButton>
+                                                    </h:column>
+
+
+                                                </h:dataTable>
+                                                <h:panelGroup id="addcomment">
+
+                                                    <h3>Add feedback </h3>
+                                                    <h4>Comment </h4>
+                                                    <div class="row"> 
+                                                        <div class="col-md-6">
+                                                            <h:inputText class="col-md-6 text-nowrap" id="commendtext" label="commendtext" value="#{projectMonitoringManagement.feedback.comment}" required="true"/>
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-4"> </div>
+                                                            <div class="col-md-6">
+                                                                <h:messages for="commendtext" class="text-danger text-nowrap"></h:messages>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h4>Feedback activated date </h4>
+                                                    <div class="row"> <div class="col-md-6"><h:inputText class="col-md-6 text-nowrap" required="true" id="factivateddate" label="factivateddate" requiredMessage="Activated date value must be filled"  value="#{projectMonitoringManagement.feedback.commentActivateDate}" > <f:convertDateTime pattern="dd-MM-yyyy HH:mm" /></h:inputText></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4"> </div>
+                                                        <div class="col-md-6">
+                                                            <h:messages for="factivateddate" class="text-danger text-nowrap">(dd-MM-yyyy hh:mm)</h:messages>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row"> <div class="col-md-6"><h:commandButton value="Add comment" action="#{projectMonitoringManagement.addComment()}">
+                                                                <f:ajax execute="form6" render="form6" ></f:ajax>
+                                                            </h:commandButton></div>
+                                                    </div>
+                                                </h:panelGroup>
+                                            </div>
+                                        </div>
+                                    </c:if>
+
+                                </h:panelGroup>
+                                <!--End of Listing of selected Milestone' feedbacks -->
+
+                            </h:form>       
+
+
+                            <!--Start of Adding new Milestone --> 
+                            <h:form  id='form5'>
+                                <h:panelGroup id='newmilestone' rendered="#{projectMonitoringManagement.newmilestoneselected}">
+                                    <div class="row">
+                                        <div class="col-md-3"> <h:outputLabel   class='text-capitalize' value="Milestone Description"></h:outputLabel></div>
+                                        <div class="col-md-3"><h:inputText id="adddescription" label="description" value="#{projectMonitoringManagement.newmilestone.description}" required="true" >
+                                                <f:validateLength minimum="3" maximum="10" />
+                                            </h:inputText> </div>
+                                        <h:message for="description" class=" row text-danger"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3"><h:outputLabel value="Activated date"></h:outputLabel> </div>
+                                        <div class="col-md-3">
+                                            <h:inputText value="#{projectMonitoringManagement.newmilestone.activeDate}" label="activateddatea" binding="#{dateComponent2}"  id="activateddateA" required="true">
+                                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm"  />
+
+                                            </h:inputText>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h:messages for="activateddatea" class="text-danger"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3"><h:outputLabel value="Due date"></h:outputLabel> </div>
+                                        <div class="col-md-3"><h:inputText  value="#{projectMonitoringManagement.newmilestone.dueDate}" id="duedateA" label="duedatea" required="true"  >
+                                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+                                                <f:validator validatorId="dateValidator" />
+                                                <f:attribute name="dateComponent" value="#{dateComponent2}" />
+
+                                            </h:inputText>
+
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h:message for="duedatea" class="row text-danger" >dd-MM-yyyy HH:mm</h:message>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" row">
+                                        <div class="col-md-3">
+                                            <h:commandButton id="addmilestonebutton" class="btn btn-lg btn-primary btn-group-justified" value="Add" action="#{projectMonitoringManagement.addMilestone()}"  >                            
+                                            </h:commandButton>
+                                        </div>  
+                                    </div>
+                                </h:panelGroup>
+                                <!--End of Adding new Milestone --> 
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+
+                </h:body>
+                <script>
+                    jQuery(document).ready(function ($) {
+                        'use strict';
+                        $('#form4\\:activeDatem, #form4\\:duedate, #form6\\:factivateddate, #form5\\:activateddateA,#form5\\:duedateA').datetimepicker({
+                            format: 'd-m-Y H:i'
+                        });
+
+                    });
+
+                </script>
+            </ui:define>
+        </ui:composition>       
+    </div>
+
+</html>

@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="resources/css/projectAllocationCss.css" rel="stylesheet" type="text/css"/>
+    
+    <h:head>
+        <title>SUMS</title>
+    </h:head>
+    <h:body>
+        <ui:include src="../header_student.xhtml" />        
+            <div class ="col-xs-12">
+                <h1>Project Ideas</h1>                
+            </div>
+            <div class="col-xs-12">
+                <h:form>
+                    <div class="row">
+                        <div class="col-md-3"> <h:outputLabel class=" text-info" value="Select Student"></h:outputLabel></div>
+                        <h:selectOneMenu value="#{shortlistController.selectedid}" onchange="submit()"
+                                         valueChangeListener="#{shortlistController.changeStudent}">
+                            <f:selectItems value="#{shortlistController.students}" var="c"
+                                           itemLabel="#{c.person.forername } #{c.person.surname} " itemValue="#{c.id}" ></f:selectItems>
+                        </h:selectOneMenu>   
+                    </div>
+                </h:form>
+            </div>
+            <div class="col-xs-12">
+                <h:form>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <h:inputText id="searchKeywordForPI" value="#{shortlistController.searchKeywordForPI}"/>
+                            <h:commandButton value="Search" action="#{shortlistController.getSearchProjectKeyword()}"/>
+                            <h:commandButton value="Reset Search" action="#{shortlistController.resetSearch()}"/>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+            <div class="col-xs-12">
+                <h:form id="projectIdeaForm">
+                    <h:dataTable border="1" value="#{shortlistController.projectList}" var="project" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">                    
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Project Title" />
+                        </f:facet>
+                        <h:outputText value="#{project.idea.title}"/>
+                    </h:column>                    
+                    <h:column>
+                        <f:facet name="header">Action</f:facet>
+                        <h:commandButton value="Add to Shortlist" action="#{shortlistController.addToShortlist(project)}">
+                            <f:ajax onevent="checkSuccessful" render="projectIdeaForm"/>
+                        </h:commandButton>
+                    </h:column>
+                    </h:dataTable>
+                    <h:panelGroup id="insertSuccess">
+                        <h:outputText id="success" class="text-info" value="Insert into Shortlist" rendered="#{shortlistController.insertShortlist}"/>
+                        <h:outputText id="unSuccess" class="text-info" value="Project Already Exist in Your Shortlist" rendered="#{shortlistController.shortlistExist}"/>
+                        <h:outputText id="maximum" class="text-info" value="You Have Reach the Maximum Size of Your Shortlist" rendered="#{shortlistController.shortlistMax}"/>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+    </h:body>
+    <script type="text/javascript">
+        function checkSuccessful(){
+            $("#insertSuccess").show();
+        }
+    </script>
+</html>
+

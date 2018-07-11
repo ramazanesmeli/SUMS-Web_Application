@@ -1,0 +1,165 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 24-Feb-2017, 05:18:08
+    Author     : ASUS
+*/
+.nav > ul > li > a:hover{
+    background-color: #C124ED;
+    color: white;
+    -webkit-box-shadow: inset 0px 0px 49px -7px rgba(168,13,168,1);
+    -moz-box-shadow: inset 0px 0px 49px -7px rgba(168,13,168,1);
+    box-shadow: inset 0px 0px 49px -7px rgba(168,13,168,1);
+}
+.nav.navbar-nav > li.dropdown.active.open > a, 
+.nav.navbar-nav > li.dropdown.active.open > ul.dropdown-menu a,
+.nav.navbar-nav > li.dropdown.open > a, 
+.nav.navbar-nav > li.dropdown.open > ul.dropdown-menu a,
+.nav.navbar-nav > li > a{
+    background-color: #9B11C2;
+    color: white;
+}
+.nav.navbar-nav > li.dropdown.active.open > a, 
+.nav.navbar-nav > li.dropdown.active.open > ul.dropdown-menu a:hover,
+.nav.navbar-nav > li.dropdown.open > a, 
+.nav.navbar-nav > li.dropdown.open > ul.dropdown-menu a:hover
+{
+    background-color: #C124ED;
+    color: white;
+    -webkit-box-shadow: inset 0px 0px 49px -7px rgba(168,13,168,1);
+    -moz-box-shadow: inset 0px 0px 49px -7px rgba(168,13,168,1);
+    box-shadow: inset 0px 0px 49px -7px rgba(168,13,168,1);
+}
+.navbar-nav .dropdown .dropdown-menu
+{
+        float: none;
+        width: auto;
+        margin-top: 0;
+        color: white;
+        background-color:#9B11C2;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+        position:absolute;
+        margin:0;
+}
+.navbar-nav .dropdown .dropdown-menu > li > a {
+    background-color: #9B11C2;
+    color: white;
+}
+.navbar-header > a:hover{
+    color: #ffffff;
+}
+.navbarItem{  
+    color: white;
+    font-weight: bold;
+}
+.navbarColour{
+    background-color: #9B11C2;    
+}
+.navbar-brand{
+    color: white;
+    font-weight: bold;
+}
+.firstBox{
+    background-color: #9B11C2;
+    height: 330px;
+    width: 250px;
+}
+.secondBox{
+    margin: 1em;
+    background-color: white;
+    height: 305px;
+    width: 225px;
+    padding: 1em;
+}
+.loginBox{
+    margin-top: 3em;
+}
+.loginText{
+    color: #9B11C2;
+    font-family: 'Verdana, Geneva, sans-serif';
+    font-weight: bold;
+}
+.loginFont{
+    text-align: center;
+    color: #9B11C2;
+    font-family: 'Verdana, Geneva, sans-serif';
+    font-weight: bold;
+}
+.loginTextMargin{
+    margin: 0.3em;
+}
+.loginInput{
+    border: 1px solid #9B11C2;
+    border-color: rgba(0,0,0,.15);
+    background-color: #B786C4;
+    font-size: 15px;
+}
+.loginButton{
+    margin-top: 1em;
+    margin-left: 0.3em;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
+    color: white;
+    font-family: 'Verdana, Geneva, sans-serif';
+    background-color: #9B11C2;
+    border: 1px solid black;
+    border-color: rgba(0,0,0,.15);
+    font-size: 15px;
+    font-weight: bold;
+    -webkit-box-shadow: -4px -2px 2px 1px rgba(183,134,196,0.61);
+    -moz-box-shadow: -4px -2px 2px 1px rgba(183,134,196,0.61);
+    box-shadow: -4px -2px 2px 1px rgba(183,134,196,0.61);
+}
+.loginImage{
+    
+    margin: 5.5em;
+    height: 120px;
+    width: 700px;
+    opacity: 0.15;
+}
+
+
+.mainTable{
+    border-collapse:collapse;
+}
+.tableHeader{
+    text-align:center;
+    background:none repeat scroll 0 0 #9B11C2;
+    color : white;
+    border-bottom:1px solid #BBBBBB;
+    padding:15px;
+}
+.tableRowEven{
+    text-align:center;
+    background:none repeat scroll 0 0 #E7D5EB;
+    border-top:1px solid #BBBBBB;
+    padding: 15px;
+}
+.tableRowOdd{
+    text-align:center;
+    background:none repeat scroll 0 0 #F9F9F9;
+    border-top:1px solid #BBBBBB;
+    padding: 15px;
+}
+.admin_box{
+    border: 1px solid purple;
+    border-radius: 15px;
+    height: 300px;
+    width: 800px;
+}
+.rowUnderline{
+    border-bottom: 1px solid black;
+    margin: 10px;
+}
+.adminCommand{
+    font-size: 20px;
+}
+.arrowStyle{
+    width: 20px;
+    height: 20px;
+}

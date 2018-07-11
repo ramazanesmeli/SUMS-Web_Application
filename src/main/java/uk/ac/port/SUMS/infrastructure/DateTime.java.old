@@ -1,0 +1,98 @@
+package uk.ac.port.SUMS.infrastructure;
+import java.util.*;
+import java.text.*;
+import java.io.*;
+
+/**
+@author Reciprocal
+*/
+public class DateTime implements Comparable<DateTime>,Formattable,Serializable{
+ private final GregorianCalendar Value;
+ private DateTime(){
+  this.Value=new GregorianCalendar(TimeZone.getTimeZone("UTC"),Locale.ROOT);
+  Value.setLenient(false);
+  Value.setGregorianChange(new Date(Long.MIN_VALUE));
+ }
+ public DateTime(long value){
+  this();
+  Value.setTimeInMillis(value);
+ }
+ public DateTime(int Year,int Month,int Day){
+  this(Year,Month,Day,0,0,0,0);
+ }
+ public DateTime(int Year,int Month,int Day,int Hour24,int Minute,int Second){
+  this(Year,Month,Day,Hour24,Minute,Second,0);
+ }
+ public DateTime(int Year,int Month,int Day,int Hour24,int Minute,int Second,int Millisecond){
+  this();
+  Value.set(Year,Month-1,Day,Hour24,Minute,Second);
+  Value.set(Calendar.MILLISECOND,Millisecond);
+  //Ensure Calendar is valid
+  Value.getTimeInMillis();
+ }
+
+ public int getYear(){
+  return Value.get(Calendar.YEAR);
+ }
+ public int getMonth(){
+  return Value.get(Calendar.MONTH)+1;
+ }
+ public int getDay(){
+  return Value.get(Calendar.DAY_OF_MONTH);
+ }
+ public int getHour24(){
+  return Value.get(Calendar.HOUR_OF_DAY);
+ }
+ public int getHour12(){
+  int Result=Value.get(Calendar.HOUR);
+  if(Result==0){Result=12;}
+  return Result;
+ }
+ public int getMinute(){
+  return Value.get(Calendar.MINUTE);
+ }
+ public int getSecond(){
+  return Value.get(Calendar.SECOND);
+ }
+ public int getMillisecond(){
+  return Value.get(Calendar.MILLISECOND);
+ }
+ public int getDayInYear(){
+  return Value.get(Calendar.DAY_OF_YEAR);
+ }
+ public boolean isAM(){
+  return Value.get(Calendar.AM_PM)==Calendar.AM;
+ }
+ public boolean isPM(){
+  return Value.get(Calendar.AM_PM)==Calendar.PM;
+ }
+ 
+ public @Override int compareTo(DateTime operand){
+  return Value.compareTo(operand.Value);
+ }
+ public boolean isGreaterThan(DateTime operand){
+  return compareTo(operand)>0;
+ }
+ public boolean isGreaterThanOrEqual(DateTime operand){
+  return compareTo(operand)>=0;
+ }
+ public boolean isLessThan(DateTime operand){
+  return compareTo(operand)<0;
+ }
+ public boolean isLessThanOrEqual(DateTime operand){
+  return compareTo(operand)<=0;
+ }
+
+ public @Override int hashCode(){
+  return Long.hashCode(Value.getTimeInMillis());
+ }
+ public @Override boolean equals(Object _operand){
+  if(_operand==null||!(_operand instanceof DateTime)){return false;}
+  DateTime operand=(DateTime)_operand;
+  return this.Value.getTimeInMillis()==operand.Value.getTimeInMillis();
+ }
+ 
+ public @Override String toString(){
+  DateFormat;
+ }
+}

@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="resources/css/projectFeedbackCss.css" rel="stylesheet" type="text/css"/>
+
+
+
+    <h:head>
+        <title>Feedback</title>
+    </h:head>
+    <h:body style="background-color:#F1EEF1"></h:body>
+    <h:body>
+
+        <ui:include src="header_staff.xhtml" />
+
+        <h1> <font color="purple">FEEDBACK</font> </h1>
+
+        <h:form>
+            <h:dataTable  headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd" class="table table-stripped" border="3" var="e" value="#{userController4.feedbackforms}">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{e.name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    <h:outputText value="#{e.status}"/>
+                </h:column>  
+                <h:column>
+                    <f:facet name="header">Grade</f:facet>
+                    <h:outputText value="#{e.grade}"/>
+                </h:column> 
+                <h:column>
+                    <f:facet name="header">Last Modified Submission</f:facet>
+                    <h:outputText value="#{e.last}"/>
+                </h:column> 
+                <h:column>
+                    <f:facet name="header">File Submissions</f:facet>
+                    <h:outputText value="#{e.file}"/>
+                </h:column> 
+                <h:column>
+                    <f:facet name="header">Feedback Comments</f:facet>
+                    <h:outputText value="#{e.feedback}"/>
+                </h:column> 
+                <h:column>
+                    <f:facet name="header">Overall Grade</f:facet>
+                    <h:outputText value="#{e.overall}"/>
+                </h:column> 
+
+                <h:column>
+                    <f:facet name="header">Action</f:facet>
+                    <h:commandButton value="Select" action="#{userController4.select(e)}"/>
+
+                </h:column>
+
+
+            </h:dataTable>
+            <hr/>
+
+            <table>
+                <tr>
+                    <td>Name :</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.name}"/></td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.status}"/></td>
+                </tr>
+                <tr>
+                    <td>Grade</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.grade}"/></td>
+                </tr>
+                <tr>
+                    <td>Last Modified Submission</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.last}"/></td>
+                </tr>
+                <tr>
+                    <td>File Submission</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.file}"/></td>
+                </tr>
+                <tr>
+                    <td>Feedback Comments</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.feedback}"/></td>
+                </tr>
+                <tr>
+                    <td>Overall Grade</td>
+                    <td><h:inputText value="#{userController4.selectedFeedbackForm.overall}"/></td>
+                </tr>
+                <tr>
+                    <td><h:commandButton value="update" action="#{userController4.update()}"/></td>
+                    <td><h:commandButton value="delete" action="#{userController4.delete()}"/></td>
+                </tr>
+            </table>
+
+
+        </h:form>
+
+
+
+        <br></br>
+
+        <h:form>
+            <h:panelGrid id = "panel" columns = "2"  border="3"
+                         cellpadding ="10" cellspacing ="2">
+                <f:facet name = "header">
+                    <h:outputText value = "Overall Marks"/>
+                </f:facet>
+
+
+
+                <h:outputLabel value = "Marks" />
+                <h:inputText />
+
+
+            </h:panelGrid>
+
+        </h:form>
+
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+
+        <h:form>
+            <h:panelGrid id = "panel" columns = "3" border = "3" bgcolor ="#800080"
+                         cellpadding = "8" cellspacing = "1">
+
+                <h:panelGroup style="font-size: 1em"><h:outputText value = "Submission Date" /></h:panelGroup>
+                <h:outputText value = "Grading Status" style="font-size: 1em"/>
+
+
+
+
+                <h:outputLabel value = "" />
+                <h:inputText  />
+                <h:outputLabel style= "font-size: 1em" value = "Submitted" />
+
+            </h:panelGrid>
+
+        </h:form>
+
+
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+
+
+
+        <h:form>
+            <h4>Overall Performance</h4>
+            <hr />
+
+            <h:selectOneRadio value = "#{userContoller2.data}">
+                <f:selectItem itemValue = "1" itemLabel = " Poor " />
+                <f:selectItem itemValue = "2" itemLabel = " Unsatisfactory " />
+                <f:selectItem itemValue = "3" itemLabel = " Average " />
+                <f:selectItem itemValue = "4" itemLabel = " Satisfactory " />
+                <f:selectItem itemValue = "5" itemLabel = " Good " />
+            </h:selectOneRadio>	   		
+            <h:commandButton value = "Submit" action = "StudentOpinionResult.xhtml" />
+        </h:form>
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+     
+
+        <h:form>
+            Extra Feedback: <h:inputTextarea value="#{UserCtrl.comment}"/><br/>
+        </h:form>    
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+        <script>
+            function ajaxOnevent(data) {
+                var status = data.status;
+                if ("begin" == status) {
+                    document.getElementById("loading-screen").style.display = "block";
+                    document.getElementById("result-screen").style.display = "none";
+
+                } else if ("success" == status) {
+                    document.getElementById("loading-screen").style.display = "none";
+                    document.getElementById("result-screen").style.display = "block";
+
+                }
+
+            }
+            function onError() {
+                alert('Error');
+            }
+        </script>
+        <h:form>
+            <h:commandButton value="Send" action="#{userController5.sendAction()}">
+                <f:ajax onevent="ajax0nevent" onerror="onError" render="output" />
+            </h:commandButton>
+            <div id="loading-screen" style="display: none">
+                <img src="ajax-loader.gif"/>
+            </div> 
+            <div id="result-screen">
+                <h:outputText id="output" value="#{userController5.resultText}"/>
+            </div>
+        </h:form>
+
+
+        <h:outputText value="&lt;br/&gt;" escape="false" />
+
+
+        <h:form>      
+            <h:commandButton value="Download Feedback" action="#{userController.download()}"/>
+        </h:form>
+
+        <h:form>
+            <h:commandButton value = "Back" action = "ListOfStudents.xhtml" />
+        </h:form>
+
+    </h:body>
+
+</html>
+
+
+

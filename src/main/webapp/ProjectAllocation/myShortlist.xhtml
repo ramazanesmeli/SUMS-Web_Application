@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="resources/css/projectAllocationCss.css" rel="stylesheet" type="text/css"/>
+    
+    <h:head>
+        <title>SUMS</title>
+    </h:head>
+    <h:body>
+        <ui:include src="../header_student.xhtml" />
+        <div class ="col-xs-12">
+            <h1>My Shortlists</h1>                
+        </div>            
+        <div class="col-xs-12">
+            <h3>Project Idea's Shortlist</h3>
+            <h:form id="shortListForm">
+                <h:dataTable border="1" value="#{shortlistController.std_shortlistProject}" var="s" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Student ID"/>
+                        </f:facet>
+                        <h:outputText value="#{shortlistController.currentStudent.studentNumber}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Rank"/>
+                        </f:facet>
+                        <h:outputText value="#{s.rank}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Project ID"/>
+                        </f:facet>
+                        <h:outputText value="#{s.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Project Title"/>
+                        </f:facet>
+                        <h:outputText value="#{s.finalProject.idea.title}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Project Status"/>
+                        </f:facet>
+                        <h:outputText value="#{s.finalProject.idea.status}" rendered="#{s.finalProject.idea.status == 'Approved'}"/> 
+                         <h:outputText value="Unavailable" rendered="#{s.finalProject.idea.status == 'Allocated'}"/>                      
+                    </h:column>                        
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Action"/>
+                        </f:facet>
+                        <h:commandButton value="Delete" action="#{shortlistController.deleteFromShortlist(s)}">
+                            <f:ajax render="shortListForm"/>
+                        </h:commandButton>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Edit Rank"/>
+                        </f:facet>
+                        <h:commandLink action="#{shortlistController.rankingShortlistUp(s, s.rank)}" rendered="#{s.rank gt 1}" >                            
+                            <h:graphicImage value="resources/image/arrowUp.png" alt="Vote up" class="arrowStyle"/>
+                            <f:ajax render="shortListForm"/>
+                        </h:commandLink>
+                        <h:commandLink action="#{shortlistController.rankingShortlistDown(s, s.rank)}" rendered="#{s.rank lt shortlistController.shortListCurrentSize}">                            
+                            <h:graphicImage value="resources/image/arrowDown.png" alt="VoteDown" class="arrowStyle"/>
+                            <f:ajax render="shortListForm"/>
+                        </h:commandLink>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>   
+         <div class="col-xs-12">
+            <h:form id="svShortListForm">
+                <h3>Supervisor Shortlist</h3>
+                <h:dataTable border="1" value="#{shortlistController.std_shortlistSv}" var="s" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Student ID"/>
+                        </f:facet>
+                        <h:outputText value="#{shortlistController.currentStudent.studentNumber}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Rank"/>
+                        </f:facet>
+                        <h:outputText value="#{s.rank}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Supervisor Name"/>                        
+                        </f:facet>
+                        <h:outputText value="#{s.supervisor.person.surname} #{s.supervisor.person.forername}"/>
+                    </h:column>            
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Action"/>
+                        </f:facet>
+                        <h:commandButton value="Delete" action="#{shortlistController.deleteFromShortlist(s)}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputLabel value="Edit Rank"/>
+                        </f:facet>
+                        <h:commandLink action="#{shortlistController.rankingSvShortlistUp(s, s.rank)}" rendered="#{s.rank gt 1}" >                            
+                            <h:graphicImage value="resources/image/arrowUp.png" alt="Vote up" class="arrowStyle"/>
+                            <f:ajax render="svShortListForm"/>
+                        </h:commandLink>
+                        <h:commandLink action="#{shortlistController.rankingSvShortlistDown(s, s.rank)}" rendered="#{s.rank lt shortlistController.shortListSvCurrentSize}">                            
+                            <h:graphicImage value="resources/image/arrowDown.png" alt="VoteDown" class="arrowStyle"/>
+                            <f:ajax render="svShortListForm"/>
+                        </h:commandLink>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>        
+    </h:body>
+</html>
+

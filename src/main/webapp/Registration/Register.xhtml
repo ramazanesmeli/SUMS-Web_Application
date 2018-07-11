@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+    <h:head>
+        <title>  Registration Page</title>
+        <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link href="resources/css/mainCSS.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+         
+       <style type="text/css"> 
+    body { text-align: center; }
+     /* from stack overflow */
+body > * { text-align: left; }
+
+layout {}
+     
+form { display: inline-block; } 
+    </style>
+    </h:head>
+    <h:body>
+        <nav class="navbar navbar-static-top navbarColour" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" style="font-family: Verdana, Geneva, sans-serif;" href="#">SUMS Student Registration Page</a>
+        </div>
+    </div>
+         </nav>
+        <h:messages id="messages"/>
+       <h:form>
+           <h:panelGrid columns="3">
+            
+                           
+              Username:
+              <h:inputText id="username" label= "Username" required= "true" requiredMessage="Please enter a username" value="#{personController.persons.username}">
+                  
+              </h:inputText>
+              <h:message for="username" style="color: red;"/>
+              
+              Forename:
+              <h:inputText id="forename" label="Forename" required="true" requiredMessage="Please Enter your forename" value="#{personController.persons.forername}">
+                  
+              </h:inputText>
+              <h:message for ="forename" style="color: red;"/>
+              
+              Surname:
+              <h:inputText id="surname" label="Surname" required="true" requiredMessage="Please Enter your surname" value="#{personController.persons.surname}">
+                  
+              </h:inputText>
+              <h:message for="surname" style="color: red; "/>
+               
+              <!--code for matching password and confirm password is from mkyong website-->
+              Password :
+              <h:inputSecret id="password" value="#{personController.persons.password}" required="true" requiredMessage="Please enter password">
+		<f:validator validatorId="passwordValidator" />
+		<f:attribute name="confirmPassword" value="#{confirmPassword}" />
+	      </h:inputSecret>
+	      <h:message for="password" style="color: red;" />
+
+	      Confirm password : 
+	     <h:inputSecret id="confirmPassword" required="true" binding="#{confirmPassword}" requiredMessage="Please enter confirm password" />
+	      <h:message for="confirmPassword" style="color: red;" />
+              
+              E-mail:
+              <h:inputText id="email" label="E-mail" required="true" requiredMessage="Please enter an email address" value="#{personController.email.address}">
+                <f:validateRegex pattern ="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"/>
+              </h:inputText>
+              <h:message for="email" style="color:red"/>
+              
+              E-mail2:
+              <h:inputText id="email2" label="E-mail" required="false" value="#{personController.email.address}">
+                 <!--<f:validateRegex pattern ="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"/>-->
+              </h:inputText>
+              <h:message for="email2" style="color:red"/>
+              
+              Phone Number:
+              <h:inputText id="phoneno" label="Phone Number" required="false" value="#{personController.phones.number}">
+                <!-- <f:validateRegex pattern="(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?"/>-->
+             </h:inputText>
+              <h:message for="phoneno" style="color:red;"/>
+              
+       
+            <h:selectOneMenu id="cohort" value="#{personController.selectedcohortid}">
+                                    <f:selectItem itemLabel="Select Cohort" itemValue="#{-1}"
+                                          noSelectionOption="true" />         
+                  <f:selectItems value="#{personController.displaycohorts}" var="a" itemLabel="#{a.title}"
+                                 itemValue="#{a.id}" > </f:selectItems>
+
+                        </h:selectOneMenu>
+        
+
+           </h:panelGrid>
+      
+                   <h:panelGrid columns="3" >
+               User Status:
+               <h:selectOneMenu id="status" value = "#{personController.personStatus.name}" required="true"> 
+                   <f:selectItem itemLabel = "Please select User Status" itemValue="null" />    
+              <f:selectItem  itemLabel="Staff"   itemValue = "Staff" /> 
+              <f:selectItem  itemLabel="External" itemValue = "External" /> 
+              <f:selectItem  itemLabel="Student" itemValue = "Student" /> 
+              <f:ajax render="names"/>
+             </h:selectOneMenu>  
+               
+                 <h:panelGroup id="names"> 
+                    
+               <h:panelGroup rendered="#{personController.personStatus.name == 'External'}">
+                    
+                       
+               Organisation Name:
+              <h:inputText id="Orgname" label ="Organisation Name" required="true" value="#{personController.organisations.name}">
+                
+            </h:inputText>
+              <h:message for="Orgname"/>
+                       
+              Postal Address:
+              <h:inputText id="address" label= "Postal Address" required= "true" value="#{personController.organisations.postalAddress}">
+                  </h:inputText>
+              <h:message for="address"/>
+              
+              Post Code:
+              <h:inputText id="postcode" label="Post Code" required="true" value="#{personController.organisations.postCode}">
+                  <f:validateRegex pattern="^(GIR ?0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]([0-9ABEHMNPRV-Y])?)|[0-9][A-HJKPS-UW]) ?[0-9][ABD-HJLNP-UW-Z]{2})$"/>
+              </h:inputText>
+              <h:message for ="postcode"/>
+              
+              Organisation Description:
+              <h:inputTextarea id="Orgdes" label="Organisation Description" required="true" value="#{personController.organisations.activity}">
+                  </h:inputTextarea>
+              <h:message for="Orgdes"/>
+              
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{personController.personStatus.name == 'Student'}">
+       Student Number:
+       <h:inputText id="studentno" label ="Student Number"  required="true" pt:placeholder ="Ex: MA1234" value="#{personController.students.studentNumber}">
+                  <f:validateRegex pattern="UP\d{1,6}"/>
+            </h:inputText>
+              <h:message for="studentno"/>
+              
+            </h:panelGroup>
+              </h:panelGroup>
+              
+              
+           </h:panelGrid>
+           
+           <h:commandButton id="register" value="SUBMIT" action="#{personController.Save}"/>
+           </h:form>
+       
+        
+    </h:body>
+</html>
+

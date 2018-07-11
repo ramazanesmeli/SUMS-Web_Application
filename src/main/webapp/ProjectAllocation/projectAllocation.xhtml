@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="resources/css/projectAllocationCss.css" rel="stylesheet" type="text/css"/>
+    
+    <h:head>
+        <title>Project Allocation</title>
+    </h:head>
+    <h:body>
+        <ui:include src="../header_admin.xhtml" />
+        <div class="col-xs-12">
+            <h1>Project Allocation</h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1> Allocate a Project Idea </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h:form id="allocateForm">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Project Idea"/>
+                            <h:outputLabel value=" : "/>
+                            <h:outputText value="#{allocationController.finalProject.idea.title}"/>
+                            
+                            <h:outputLabel value="Status"/>
+                            <h:outputLabel value=" : "/>
+                            <h:outputText value="#{allocationController.finalProject.idea.status}"/>
+                            
+                            <h:outputLabel value="Allocate to Student"/>
+                            <h:outputLabel value=" : "/>
+                            <h:selectOneMenu value="#{allocationController.selectedID}" onchange="submit()"
+                                             valueChangeListener="#{allocationController.changeStudentID}">
+                                <f:selectItem itemValue="#{null}" itemLabel="--select student--"/>
+                                <f:selectItems value="#{allocationController.allStudents}" var="s"
+                                               itemLabel="#{s.person.forername} #{s.person.surname} " itemValue="#{s.id}" ></f:selectItems>
+                                               <f:selectItem itemValue="#{null}" itemLabel="--select student preferences--" />
+                                               <f:selectItems value="#{allocationController.students}" var="s"
+                                               itemLabel="#{s.person.forername} #{s.person.surname} " itemValue="#{s.id}" ></f:selectItems>
+                                
+                            </h:selectOneMenu>
+                      
+                            <h:outputLabel value="Allocate to Staff"/>
+                            <h:outputLabel value=" : "/>
+                            <h:selectOneMenu value="#{allocationController.svID}" onchange="submit()"
+                                         valueChangeListener="#{allocationController.changeSvID}">
+                                <f:selectItem itemValue="#{null}" itemLabel="--select supervisor--" rendered="#{!empty allocationController.supervisors}"/>
+                                <f:selectItems value="#{allocationController.supervisors}" var="s"
+                                               itemLabel="#{s.person.forername} #{s.person.surname} " itemValue="#{s.id}" rendered="#{!empty allocationController.supervisors}"></f:selectItems>
+                                <f:selectItem itemValue="#{null}" itemLabel="--select student preferences supervisor--" />
+                                <f:selectItems value="#{allocationController.addSupervisor}" var="s"
+                                               itemLabel="#{s.person.forername} #{s.person.surname} " itemValue="#{s.id}" ></f:selectItems>
+                            </h:selectOneMenu>
+                            <h:outputText value="#{StatusChange.by.fullName}"/>
+                            <h:outputText value="#{StatusChange.by.id}"/>
+                            <h:outputText value="#{StatusChange.when.time}"/>
+                        </h:panelGrid>
+                        <h:panelGroup id="checkStudentWarning" rendered="#{!allocationController.checkStudent}">
+                            <h:outputText class="text-warning" value="Select Student"/>
+                        </h:panelGroup>
+                         <h:commandButton value="Allocate Project" action="#{allocationController.projectAllocation()}" rendered="#{allocationController.checkStudent}">
+                            <f:ajax onevent="checkStudent" render="allocateForm"/>
+                        </h:commandButton>
+                    </h:form>                    
+                </div>
+            </div>            
+        </div>
+    </h:body>
+    <script type="text/javascript">
+        function checkStudent(){
+            $("#checkStudentWarning").hide();
+        }
+    </script>
+</html>
+

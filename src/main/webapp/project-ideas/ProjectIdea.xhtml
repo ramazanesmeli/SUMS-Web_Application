@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+ <f:metadata>
+  <f:viewParam name="title" value="#{I.title}"/>
+  <f:viewAction action="#{I.LoadModel}"/>
+ </f:metadata>
+ <ui:composition template="/WEB-INF/Template.xhtml">
+  <ui:define name="title">SUMS — View Project Idea</ui:define>
+  <ui:define name="head">
+   <link rel="stylesheet" href="./style.css"/>
+  </ui:define>
+ 
+  <ui:define name="Content">
+  
+   <h:messages globalOnly="true" showSummary="false" showDetail="true"/>
+   <h:panelGroup layout="block" rendered="#{!I.loadFailure}">
+
+    <h1><h:outputFormat value="Project Idea: {0}">
+      <f:param value="#{I.model.title}"/>
+    </h:outputFormat></h1>
+
+    <div class="CommandLinks">
+     <h:link
+      rendered="#{I.canNavigateToAmendIdea}"
+      outcome="SubmitAmendProjectIdea.xhtml" includeViewParams="true"
+      value="Amend Idea"
+     />
+     <h:link
+      rendered="#{I.canNavigateToStatusChanges}"
+      outcome="ProjectIdeaStatusChanges.xhtml" includeViewParams="true"
+      value="View Status Changes"
+     />
+    </div>
+    <div class="clear"/>
+
+    <h:panelGrid columns="2">
+     <h:outputLabel value="Categories:" for="Categories"/>
+     <h:outputText id="Categories" value="#{I.model.categories}">
+      <f:converter converterId="CategoryList"/>
+     </h:outputText>
+
+     <h:outputLabel value="Owner:" for="Owner"/>
+     <h:outputFormat id="Owner" value="{0} ({1})">
+      <f:param value="#{I.model.owner.fullName}"/>
+      <f:param value="#{I.model.owner.username}"/>
+     </h:outputFormat>
+
+     <h:outputLabel value="Owner Organisation:" for="OwnerOrganisation"/>
+     <h:outputFormat id="OwnerOrganisation" value="{0}">
+      <f:param value="#{I.model.owner.organisation.name}"/>
+     </h:outputFormat>
+
+     <h:outputLabel value="Intended for:" for="IntendedFor"/>
+     <h:panelGroup>
+      <h:outputText id="IntendedFor" value="#{I.model.intendedFor}"/>
+      <!--
+      <c:if test="# {I.model.intendedForEveryone}">
+       <h:outputText id="IntendedFor" value="Everyone"/>
+      </c:if>
+      <c:if test="# {!I.model.intendedForEveryone}">
+       <h:dataTable id="IntendedFor" value="# {I.model.intendedFor}" var="For">
+        <h:column>
+         <h:outputFormat value="{0} ({1})">
+          <f:param value="# {For.fullName}"/>
+          <f:param value="# {For.ID}"/>
+         </h:outputFormat>
+        </h:column>
+       </h:dataTable>
+      </c:if>
+      -->
+     </h:panelGroup>
+
+     <h:outputLabel value="Submission Date:" for="SubmissionDate"/>
+     <h:outputFormat id="SubmissionDate" value="{0,date,medium}">
+      <!--Date will be interpreted according to the host system's timezone-->
+      <f:param value="#{I.model.submissionDate.toInstant().toEpochMilli()}"/>
+     </h:outputFormat>
+
+     <h:outputLabel value="Status:" for="Status"/>
+     <h:outputFormat id="Status" value="{0}">
+      <f:param value="#{I.model.status.displayString}"/>
+     </h:outputFormat>
+    </h:panelGrid>
+
+    <h2>Academic Question</h2>
+    <p class="FormattedText"><h:outputText value="#{I.model.academicQuestion}"/></p>
+
+    <h2>Description</h2>
+    <p class="FormattedText"><h:outputText value="#{I.model.description}"/></p>
+
+    <h2>Aims &amp; Objectives</h2>
+    <p class="FormattedText"><h:outputText value="#{I.model.aimsAndObjectives}"/></p>
+
+   </h:panelGroup>
+
+  </ui:define>
+ </ui:composition>
+</html>

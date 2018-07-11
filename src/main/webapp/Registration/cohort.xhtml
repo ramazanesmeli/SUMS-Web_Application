@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Cohort Registration</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:panelGrid columns="3">
+        Title
+        <h:inputText id="title" label="Title" required="true" requiredMessage="Please Enter a cohort title" value="#{cohortController.cohorts.title}"/>
+        <h:message for="title" style="color:blue;"/>
+        
+        Registration Start Date:
+        <h:inputText id="RegSta" label="Register Start" required="true" requiredMessage="Please enter the registration start date of this cohort" value="#{cohortController.cohorts.registerStart}">
+            <f:convertDateTime pattern ="dd/mm/yy"/>
+        </h:inputText>
+         <h:message for="RegSta" style="color:blue;"/>
+         
+        Registration Stop Date:
+        <h:inputText id="RegSto" label="Register Stop" required="true" requiredMessage="Please enter the registration stop date of this cohort" value="#{cohortController.cohorts.registerStop}">
+            <f:convertDateTime pattern="dd/mm/yy"/>
+        </h:inputText>
+        <h:message for="RegSto" style="color:blue;"/>
+        
+        Project Start Date:
+        <h:inputText id="ProSta" label="Project Start" required="true" requiredMessage="Please enter the Project start date" value="#{cohortController.cohorts.projectStart}">
+            <f:convertDateTime pattern ="dd/mm/yy"/>
+        </h:inputText>
+        <h:message for="ProSta" style="color:blue;"/>
+        
+        Project Stop Date:
+        <h:inputText id="ProSto" label="Project Stop" required="true" requiredMessage="Please enter the project stop date" value="#{cohortController.cohorts.projectStop}">
+            <f:convertDateTime pattern="dd/mm/yy"/>
+        </h:inputText>
+        <h:message for="ProSto" style="color:blue;"/>
+        
+        <h:commandButton id="project" value="Submit" action="#{cohortController.doChangeAddress()}"/>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

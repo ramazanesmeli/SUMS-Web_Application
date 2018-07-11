@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+ <f:metadata>
+  <f:viewParam name="title" value="#{SAI.title}"/>
+  <f:viewAction action="#{SAI.LoadModel}"/>
+ </f:metadata>
+ <ui:composition template="/WEB-INF/Template.xhtml">
+  <ui:define name="title">
+   <c:if test="#{!SAI.amending}">SUMS — Submit Project Idea</c:if>
+   <c:if test="#{SAI.amending}">SUMS — Amend Project Idea</c:if>
+  </ui:define>
+  <ui:define name="head">
+   <link rel="stylesheet" href="./style.css"/>
+  </ui:define>
+ 
+  <ui:define name="Content">
+  
+   <h:messages globalOnly="true" showSummary="false" showDetail="true"/>
+   <h:panelGroup layout="block" rendered="#{!SAI.loadFailure}">
+
+    <c:if test="#{!SAI.amending}">
+     <h1>Submit a new Project Idea</h1>
+    </c:if>
+    <c:if test="#{SAI.amending}">
+     <h1><h:outputFormat value="Amend Project Idea: {0}">
+       <f:param value="#{SAI.model.title}"/>
+     </h:outputFormat></h1>
+     <!--
+     <Date will be interpreted according to the host system's timezone>
+     <p><h:outputFormat value="Submission Date: {0,date,medium}">
+      <f:param value="#{SAI.model.submissionDate.toInstant().toEpochMilli()}"/>
+     </h:outputFormat></p>
+     -->
+    </c:if>
+
+    <h:form id="Main">
+
+     <h:panelGrid columns="3">
+      <h:outputLabel value="Title:" for="Title" rendered="#{!SAI.amending}"/>
+      <h:inputText id="Title" value="#{SAI.model.title}" rendered="#{!SAI.amending}"/>
+      <h:message for="Title" rendered="#{!SAI.amending}"/>
+
+      <h:outputLabel value="Categories:" for="Categories"/>
+      <h:selectManyCheckbox id="Categories" value="#{SAI.selectedCategories}">
+       <f:selectItems
+        value="#{SAI.availableCategories}" var="Category"
+        itemLabel="#{Category.name}" itemValue="#{Category.name}"
+       />
+      </h:selectManyCheckbox>
+      <h:message for="Categories"/>
+
+      <h:outputLabel value="Intended for:" for="IntendedFor"/>
+      <h:inputText id="IntendedFor" value="#{SAI.model.intendedFor}"/>
+      <h:message for="IntendedFor"/>
+
+      <h:outputLabel value="Status:" for="Status" rendered="#{SAI.userCanChangeStatus}"/>
+      <h:selectOneMenu id="Status" value="#{SAI.modelStatus}" rendered="#{SAI.userCanChangeStatus}">
+       <!--TODO Use DisplayString property-->
+       <f:selectItems value="#{SAI.projectIdeaStatuses}"/>
+      </h:selectOneMenu>
+      <h:message for="Status" rendered="#{SAI.userCanChangeStatus}"/>
+
+      <h:panelGroup layout="block" rendered="#{SAI.userCanWithdraw or SAI.userCanUnWithdraw}"/>
+      <h:commandButton id="Withdraw" value="Withdraw Project Idea" rendered="#{SAI.userCanWithdraw}" action="#{SAI.WithdrawProjectIdea}"/>
+      <h:commandButton id="UnWithdraw" value="Unwithdraw Project Idea" rendered="#{SAI.userCanUnWithdraw}" action="#{SAI.UnWithdrawProjectIdea}"/>
+      <h:message for="Withdraw" rendered="#{SAI.userCanWithdraw}"/>
+      <h:message for="UnWithdraw" rendered="#{SAI.userCanUnWithdraw}"/>
+
+      <h:outputLabel value="Academic Question:" for="AcademicQuestion"/>
+      <h:inputTextarea id="AcademicQuestion" value="#{SAI.model.academicQuestion}"/>
+      <h:message for="AcademicQuestion"/>
+
+      <h:outputLabel value="Description:" for="Description"/>
+      <h:inputTextarea id="Description" value="#{SAI.model.description}"/>
+      <h:message for="Description"/>
+
+      <h:outputLabel value="Aims &amp; Objectives:" for="AimsAndObjectives"/>
+      <h:inputTextarea id="AimsAndObjectives" value="#{SAI.model.aimsAndObjectives}"/>
+      <h:message for="AimsAndObjectives"/>
+
+      <!--TODO Reassign Owner for Administrators-->
+     </h:panelGrid>
+
+     <c:if test="#{!SAI.amending}">
+      <h:commandButton value="Submit Project Idea" action="#{SAI.SubmitProjectIdea}"/>
+     </c:if>
+     <c:if test="#{SAI.amending}">
+      <h:commandButton value="Amend Project Idea" action="#{SAI.AmendProjectIdea}"/>
+     </c:if>
+
+    </h:form>
+   </h:panelGroup>
+
+  </ui:define>
+ </ui:composition>
+</html>

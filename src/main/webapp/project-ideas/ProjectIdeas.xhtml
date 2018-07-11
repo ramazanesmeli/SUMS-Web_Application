@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+ <f:metadata>
+  <f:viewParam name="search" value="#{IL.searchString}"/>
+  <f:viewAction action="#{IL.LoadModel}"/>
+ </f:metadata>
+ <ui:composition template="/WEB-INF/Template.xhtml">
+  
+  <ui:define name="title">
+   <c:if test="#{IL.searchStringDefined}">SUMS — Search Project Ideas</c:if>
+   <c:if test="#{!IL.searchStringDefined}">SUMS — My Project Ideas</c:if>
+  </ui:define>
+  <ui:define name="head">
+   <link rel="stylesheet" href="./style.css"/>
+  </ui:define>
+ 
+  <ui:define name="Content">
+  
+   <h:messages globalOnly="true" showSummary="false" showDetail="true"/>
+   <h:panelGroup layout="block" rendered="#{!IL.loadFailure}">
+
+    <c:if test="#{IL.searchStringDefined}">
+     <h1><h:outputFormat value='Search Results for "{0}"'>
+       <f:param value="#{IL.searchString}"/>
+     </h:outputFormat></h1>
+    </c:if>
+    <c:if test="#{!IL.searchStringDefined}">
+     <h1><h:outputFormat value="Project Ideas owned by {0}">
+       <!--It is safe to retrieve the CurrentUser property here as LoadModel will have been called and SearchStringDefined and LoadFailure are both false; see the postconditions of the LoadModel method-->
+       <f:param value="#{IL.currentUser.fullName}"/>
+     </h:outputFormat></h1>
+    </c:if>
+
+    <c:if test="#{IL.modelEmpty}">
+     <c:if test="#{IL.searchStringDefined}">
+      <h:outputFormat value="No matches found">
+      </h:outputFormat>
+     </c:if>
+     <c:if test="#{!IL.searchStringDefined}">
+      <h:outputFormat value="{0} ({1}) does not currently own any Project Ideas">
+       <!--It is safe to retrieve the CurrentUser property here; see above-->
+       <f:param value="#{IL.currentUser.fullName}"/>
+       <f:param value="#{IL.currentUser.username}"/>
+      </h:outputFormat>
+     </c:if>
+    </c:if>
+
+    <h:dataTable value="#{IL.model}" var="ProjectIdea" class="border" rendered="#{!IL.modelEmpty}">
+     <h:column>
+      <f:facet name="header">Title</f:facet>
+      <h:outputLink value="ProjectIdea.xhtml">
+       <f:param name="title" value="#{ProjectIdea.title}"/>
+       <h:outputText value="#{ProjectIdea.title}"/>
+      </h:outputLink>
+     </h:column>
+     <h:column>
+      <f:facet name="header">Date Submitted</f:facet>
+      <!--Date will be interpreted according to the host system's timezone-->
+      <h:outputFormat value="{0,date,medium}">
+       <f:param value="#{ProjectIdea.submissionDate.toInstant().toEpochMilli()}"/>
+      </h:outputFormat>
+     </h:column>
+     <h:column>
+      <f:facet name="header">Status</f:facet>
+      <h:outputText value="#{ProjectIdea.status.displayString}"/>
+     </h:column>
+     <h:column rendered="#{IL.searchStringDefined}">
+      <f:facet name="header">Owner</f:facet>
+      <h:outputText value="#{ProjectIdea.ownerFullName}"/>
+     </h:column>
+    </h:dataTable>
+
+   </h:panelGroup>
+
+  </ui:define>
+ </ui:composition>
+</html>

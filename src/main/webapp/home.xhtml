@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head> 
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link href="resources/css/mainCSS.css" rel="stylesheet" type="text/css"/> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+           
+    </h:head>
+    <h:body>
+        <div>
+            <!--<ui:include src="header_student.xhtml" /> -->
+            <!--<ui:include src="header_guest.xhtml" /> -->
+           <ui:include src="header_admin.xhtml" />
+        </div>        
+        <div class="container-fluid">
+            <div class="col-xs-12 loginBox">
+                <div class="col-xs-8">
+                    <h:graphicImage value="resources/image/uop1.png" class="loginImage"/>                                   
+                </div>
+                <div class="col-xs-4">
+                    <div class="firstBox">
+                        <div class="col-xs-12 secondBox">
+                            <h3 class="loginFont">Log In</h3>
+                            <h:form>
+                                <h:panelGrid columns="1">
+                                    <h:outputLabel id="userID" class="loginText loginTextMargin" value="User ID: " for="userID"/>
+                                    <h:inputText id="userIDInput" class="loginInput loginTextMargin" label="User ID" required="true" value=""/>
+                                    <h:outputLabel id="password" class="loginText loginTextMargin" value="Password: " for="password"/>
+                                    <h:inputSecret id="passwordInput" class="loginInput loginTextMargin" label="Password" required="true" value=""/>  
+                                </h:panelGrid>
+                                <h:commandButton class="loginButton" value ="Log In" action="#"></h:commandButton>
+                                <p class="loginText loginTextMargin" style="font-size: 12px;">Not a member?<h:commandLink value="Register" action="#"></h:commandLink></p>                                
+                            </h:form>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>
+

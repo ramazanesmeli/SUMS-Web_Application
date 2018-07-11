@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link href="resources/css/projectAllocationCss.css" rel="stylesheet" type="text/css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <h:head>
+        <title>System Setting</title>
+    </h:head>
+    <h:body>
+       <ui:include src="../header_admin.xhtml" />
+        <div class ="col-xs-12">
+            <h1>Administrator Page</h1>            
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h:form>
+                        <h:dataTable border="1" value="#{allocationController.properties}" var="item" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                            <h:column>
+                                <f:facet name="header">Properties</f:facet>
+                                <h:outputText value="#{item.shortListName}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Properties</f:facet>
+                                <h:outputText value="#{item.shortlistMax}"/>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Action</f:facet>
+                                <h:commandButton value="Edit" action="#{allocationController.editProperties(item)}">
+                                    <f:ajax onevent="displayEditSection" render="editSectionForm"/>
+                                </h:commandButton>
+                            </h:column>
+                        </h:dataTable>
+                    </h:form>
+                </div>
+            </div>
+            <div class="row">
+                <div id="editSection" class="col-xs-12" style="display:none">
+                    <h:form id="editSectionForm">
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Propertie's Name"/>
+                            <h:outputLabel value=":"/>
+                            <h:outputText value="#{allocationController.sp.shortListName}"/>
+
+                            <h:outputLabel value="Property"/>
+                            <h:outputLabel value=":"/>
+                            <h:inputText value="#{allocationController.sp.shortlistMax}"/>
+                            <h:panelGroup/>
+                            <h:commandButton value="Save" action="#{allocationController.saveProperties()}"/>
+                        </h:panelGrid>    
+                    </h:form>
+                </div>
+            </div>
+        </div>        
+    </h:body>
+    <script type="text/javascript">
+        function displayEditSection(){
+           
+            $("#editSection").show();
+        }
+       
+    </script>
+</html>
+

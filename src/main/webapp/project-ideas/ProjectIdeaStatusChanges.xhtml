@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+ <f:metadata>
+  <f:viewParam name="title" value="#{SC.title}"/>
+  <f:viewAction action="#{SC.LoadModel}"/>
+ </f:metadata>
+ <ui:composition template="/WEB-INF/Template.xhtml">
+  <ui:define name="title">SUMS — Project Idea Status Changes</ui:define>
+  <ui:define name="head">
+   <link rel="stylesheet" href="./style.css"/>
+  </ui:define>
+ 
+  <ui:define name="Content">
+  
+   <h:messages globalOnly="true" showSummary="false" showDetail="true"/>
+   <h:panelGroup layout="block" rendered="#{!SC.loadFailure}">
+
+    <h1><h:outputFormat value="Status Changes for: {0}">
+      <f:param value="#{SC.model.title}"/>
+    </h:outputFormat></h1>
+
+    <h:dataTable value="#{SC.model.statusChanges}" var="StatusChange" class="border">
+     <h:column>
+      <f:facet name="header">When</f:facet>
+      <!--Date–Time will be interpreted according to the host system's timezone-->
+      <h:outputFormat value="{0,date,medium}, {0,time,medium}">
+       <f:param value="#{StatusChange.when.toInstant().toEpochMilli()}"/>
+      </h:outputFormat>
+     </h:column>
+     <h:column>
+      <f:facet name="header">To</f:facet>
+      <h:outputText value="#{StatusChange.to.displayString}"/>
+     </h:column>
+     <h:column>
+      <f:facet name="header">By</f:facet>
+      <h:outputFormat value="{0} ({1})">
+       <f:param value="#{StatusChange.by.fullName}"/>
+       <f:param value="#{StatusChange.by.username}"/>
+      </h:outputFormat>
+     </h:column>
+    </h:dataTable>
+
+   </h:panelGroup>
+
+  </ui:define>
+ </ui:composition>
+</html>

@@ -1,0 +1,14 @@
+[pack]
+	buildbitmaps = false
+[core]
+	symlinks = false
+	repositoryformatversion = 0
+	filemode = false
+	logallrefupdates = true
+	bare = false
+[remote "OriginMerge"]
+	url = https://press-any-key-to-continue@github.com/press-any-key-to-continue/UOP_2016-2017_APSW_GroupB
+	fetch = +refs/heads/*:refs/remotes/OriginMerge/*
+[branch "APSW"]
+	remote = OriginMerge
+	merge = refs/heads/APSW

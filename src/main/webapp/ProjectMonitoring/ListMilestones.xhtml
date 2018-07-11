@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <div class="row">
+        <ui:composition template="/WEB-INF/TemplateStudent.xhtml">
+
+
+            <ui:define name="Content">
+                <h:head>
+                    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+
+
+                </h:head>
+                <h:body>
+
+                    <div class="row">
+                           <div class="row"> <h2 class="text-center text-info"> View Your Milestones </h2></div>
+   
+                        <div class="col-md-3"></div>
+
+                        <div class="col-md-6">
+                            <h:form>
+                                <div class="row">
+                                    <h:outputLabel class=" text-info h3 col-md-4" value="Select Student"/>
+                                    <h:selectOneMenu class="btn btn-lg btn-default col-md-4 text-left" value="#{listMilestoneManagement.selectedid}" onchange="submit()"
+                                                     valueChangeListener="#{listMilestoneManagement.studentCodeChanged}">
+                                        <f:selectItem itemLabel="Select a Student" itemValue="#{null}"
+                                                      noSelectionOption="true" />
+                                        <f:selectItems value="#{listMilestoneManagement.students}" var="c" 
+                                                       itemLabel="#{c.person.forername } #{c.person.surname} " itemValue="#{c.id}" ></f:selectItems>
+                                    </h:selectOneMenu>
+
+                                </div>
+                            </h:form>
+                            <h:form>
+                                <div class="row">
+                                    <h:panelGroup rendered="#{listMilestoneManagement.studentselected}">
+                                        <hr ></hr>
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <h4 class="col-md-5">Project Title:</h4>  
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <h:outputLabel class="row h5 text-info" value="#{listMilestoneManagement.student.finalProject.idea.title}" rendered="#{listMilestoneManagement.student.finalProject ne null}"></h:outputLabel>  
+                                            <h:outputLabel class="row h5 text-info" value="No allocated or assigned project found" rendered="#{listMilestoneManagement.student.finalProject eq null}" ></h:outputLabel>  
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <h4 class="col-md-5">Project Supervisor:</h4>  
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <h:outputLabel class="row h5 text-info" rendered="#{listMilestoneManagement.ap.staffs.isSupervisor eq true}" value="#{listMilestoneManagement.ap.staffs.person.forername} #{listMilestoneManagement.ap.staffs.person.surname }" > </h:outputLabel>
+                                            <h:outputLabel class="row h5 text-info" rendered="#{listMilestoneManagement.ap.staffs eq null}" value=" No Supervisor Found" > </h:outputLabel>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+                                            <h4 class="col-md-5">Project Mark:</h4> 
+                                        </div>
+
+                                    </h:panelGroup>
+
+                                </div>   
+                                <h:panelGroup rendered="#{listMilestoneManagement.studentselected and listMilestoneManagement.milestones.size() gt 0}">
+                                    <hr ></hr>
+                                    <div class="row">
+                                        <h:outputLabel class="col-md-3" value="Milestones:"></h:outputLabel>
+                                    </div>
+                                    <div class="row">
+                                        <h:dataTable class="table table-responsive table-hover" value="#{listMilestoneManagement.milestones}" var="m" border="1">
+
+                                            <f:facet name="header">
+                                                <h2 class='text-success'> Projet id</h2>
+                                                <h:outputText value="#{listMilestoneManagement.student.finalProject.id}" />
+                                            </f:facet>
+
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    <h:outputText class="btn-group-lg" value="Milestone Description" />
+                                                </f:facet>
+                                                <h:outputText value="#{m.description}" />
+                                            </h:column>
+
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Activated Date" />
+                                                </f:facet>
+                                                <h:outputText value="#{m.activeDate}" > <f:convertDateTime pattern="dd-MM-yyyy HH:mm " ></f:convertDateTime> </h:outputText>
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Due Date" />
+                                                </f:facet>
+                                                <h:outputText value="#{m.dueDate}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" ></f:convertDateTime> </h:outputText>
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="Status" />  
+                                                </f:facet>
+                                                <h:outputText class=" bg-success text-success" value="#{m.status} Not Graded" rendered="#{m.status eq 'Submitted' and m.mark eq 0}" />
+                                                <h:outputText class=" bg-success text-success" value="#{m.status } Graded : #{m.mark} " rendered="#{m.status eq 'Submitted' and m.mark gt 0}" />
+                                                <h:outputText class=" bg-warning text-warning" value="#{m.status}" rendered="#{m.status eq 'Not Submitted' and m.dueDate.after(listMilestoneManagement.currentDate)}" />
+                                                <h:outputText class="bg-danger text-danger" value="#{m.status} (late)" rendered="#{m.status eq 'Not Submitted' and m.dueDate.before(listMilestoneManagement.currentDate)}" />
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    <h:outputText value="View Detail" />
+                                                </f:facet>
+                                                <h:commandButton  class='btn-lg btn-danger' value="Detail" action="#{listMilestoneManagement.selectMilestone(m)}">
+                                                </h:commandButton>
+                                            </h:column>
+                                        </h:dataTable>
+                                    </div>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{listMilestoneManagement.studentselected and listMilestoneManagement.milestones.size() lt 1}" >
+                                    <hr ></hr>
+                                    <h1 class="text-danger text-center"> No milestone found </h1>
+                                </h:panelGroup>
+                            </h:form> 
+                            <!--End of selecting milestone -->
+                            <!--Start of milestone submit form-->
+                            <h:form enctype="multipart/form-data" id="formm">
+                                <h:panelGroup rendered="#{listMilestoneManagement.milestoneselected}">
+                                    <h:panelGroup>
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="col-md-4"> <h:outputLabel class='text-capitalize text-primary' value="Milestone Description"></h:outputLabel></div>
+                                                <div class="col-md-3"><h:outputLabel value="#{listMilestoneManagement.selectedmilestone.description}"></h:outputLabel> </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3"><h:outputLabel value="Activated date"></h:outputLabel> </div>
+                                                <div class="col-md-3"><h:outputLabel value="#{listMilestoneManagement.selectedmilestone.activeDate}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" ></f:convertDateTime> </h:outputLabel></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3"><h:outputLabel value="Due date"></h:outputLabel> </div>
+                                                <div class="col-md-3"><h:outputLabel value="#{listMilestoneManagement.selectedmilestone.dueDate}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm"  ></f:convertDateTime> </h:outputLabel></div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3"><h:outputLabel value="Status"></h:outputLabel> </div>
+                                                <div class="col-md-3"><h:outputLabel id="latestatus"  class ="alert-danger" value="#{listMilestoneManagement.selectedmilestone.status} (Late)"   rendered="#{listMilestoneManagement.selectedmilestone.status!='Submitted' and listMilestoneManagement.selectedmilestone.dueDate.before(listMilestoneManagement.currentDate)}"  />
+                                                    <h:outputLabel  class ="alert-success" value="#{listMilestoneManagement.selectedmilestone.status}" rendered="#{listMilestoneManagement.selectedmilestone.status=='Submitted'}"  />
+                                                    <h:outputLabel  class ="alert-warning" value="#{listMilestoneManagement.selectedmilestone.status} " rendered="#{listMilestoneManagement.selectedmilestone.status!='Submitted' and listMilestoneManagement.selectedmilestone.dueDate.after(listMilestoneManagement.currentDate)}"  />
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h:outputLabel class="bg-danger text-center" value="Sorry! You can not make submission after deadline" rendered="#{listMilestoneManagement.selectedmilestone.status!='Submitted' and listMilestoneManagement.selectedmilestone.dueDate.before(listMilestoneManagement.currentDate)}"> </h:outputLabel>
+                                                </div>   
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h:outputLabel class="bg-danger text-center" value="Sorry! You can not make submission before activation date " rendered="#{listMilestoneManagement.selectedmilestone.status!='Submitted' and listMilestoneManagement.selectedmilestone.activeDate.after(listMilestoneManagement.currentDate) and listMilestoneManagement.selectedmilestone.dueDate.after(listMilestoneManagement.currentDate) }" > </h:outputLabel>
+                                                </div>   
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3"><h:outputLabel value="Submitted date" rendered="#{listMilestoneManagement.selectedmilestone.status=='Submitted'}" ></h:outputLabel> </div>
+                                                <div class="col-md-3"><h:outputLabel value="#{listMilestoneManagement.selectedmilestone.submittedDate}" rendered="#{listMilestoneManagement.selectedmilestone.status=='Submitted'}"><f:convertDateTime pattern="dd-MM-yyyy HH:mm"  ></f:convertDateTime> </h:outputLabel> </div>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup >
+                                    <div class="row">
+                                        <h:panelGroup rendered="#{listMilestoneManagement.selectedmilestone.filePath != null}">
+                                            <div class="row">
+                                                <div class="col col-md-3"><h:outputLabel value="Download Uploaded File"  ></h:outputLabel>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <h:commandButton class="btn-sm btn-primary" value="#{listMilestoneManagement.selectedmilestone.filePath}" action="#{listMilestoneManagement.dowloadFile}"> </h:commandButton>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup rendered="#{listMilestoneManagement.selectedmilestone.fileContext eq null  and listMilestoneManagement.selectedmilestone.activeDate.before(listMilestoneManagement.currentDate) and  listMilestoneManagement.selectedmilestone.dueDate.after(listMilestoneManagement.currentDate)}">
+                                            <div class="row">
+                                                <div class="col-md-3"> 
+                                                    <h:outputLabel class='text-warning' value="Add File" >
+                                                    </h:outputLabel> 
+                                                </div>
+                                                <div class="col-md-3"><h:inputFile value="#{listMilestoneManagement.file1}" required="true" label="file"   />
+                                                    <h:messages class="row"  for="file">Please select your attachment for this submission</h:messages></div>
+                                            </div>
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{listMilestoneManagement.selectedmilestone.fileContext ne null and listMilestoneManagement.selectedmilestone.dueDate.after(listMilestoneManagement.currentDate)}">
+                                            <div class="row">
+                                                <div class="col-md-3"> <h:outputLabel value="Change File" ></h:outputLabel>
+                                                </div>
+                                                <div class="col-md-3"><h:inputFile value="#{listMilestoneManagement.file1}" label="file"   />
+                                                    <h:messages class="row"  for="file">You can change your attachment for this submission</h:messages>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3"><h:outputLabel value="Add comment"></h:outputLabel> </div>
+                                        <div class="col-md-4"><h:inputTextarea rows="3"  value="#{listMilestoneManagement.selectedmilestone.comment}" /></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="row"><h:outputLabel value="Feed Backs"></h:outputLabel> </div>
+                                        <div class="row">
+                                            <h:dataTable class="table table-striped" value="#{listMilestoneManagement.feedbacks}" var="m" border="1" >
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText class="btn-group-lg" value="feedBack by" />
+                                                    </f:facet>
+                                                    <h:outputText value="#{m.staff.person.personStatus.name} #{m.staff.person.forername} #{m.staff.person.surname}" rendered="#{m.commentActivateDate.before(listMilestoneManagement.currentDate)}" />
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Comment Date" />
+                                                    </f:facet>
+                                                    <h:outputText value="#{m.commentDate}" rendered="#{m.commentActivateDate.before(listMilestoneManagement.currentDate)}" ><f:convertDateTime pattern="dd-MM-yyyy HH:mm" ></f:convertDateTime> </h:outputText>
+                                                </h:column>
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                        <h:outputText value="Comment" />
+                                                    </f:facet>
+                                                    <h:outputText value="#{m.comment}" rendered="#{m.commentActivateDate.before(listMilestoneManagement.currentDate)}" />
+                                                </h:column>
+                                            </h:dataTable>
+                                        </div>
+                                    </div>
+                                    <h:panelGroup rendered="#{listMilestoneManagement.selectedmilestone.dueDate.after(listMilestoneManagement.currentDate) and listMilestoneManagement.selectedmilestone.activeDate.before(listMilestoneManagement.currentDate) and listMilestoneManagement.selectedmilestone.mark eq 0}" >
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <h:commandButton class="btn btn-lg btn-success btn-group-justified" value="Save" action="#{listMilestoneManagement.submitMilestone}"> </h:commandButton>
+                                            </div>
+                                            <div class="col-md-3">
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:form>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                </h:body>
+            </ui:define></ui:composition></div>
+</html>
+

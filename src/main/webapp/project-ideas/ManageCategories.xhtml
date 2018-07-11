@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:h="http://xmlns.jcp.org/jsf/html"
+ xmlns:f="http://xmlns.jcp.org/jsf/core"
+ xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+ <ui:composition template="/WEB-INF/Template.xhtml">
+  <ui:define name="title">SUMS — Manage Project Categories</ui:define>
+  <ui:define name="head">
+   <link rel="stylesheet" href="./style.css"/>
+  </ui:define>
+ 
+  <ui:define name="Content">
+  
+   <h:messages globalOnly="true" showSummary="false" showDetail="true"/>
+   <h1>Project Categories</h1>
+
+   <h:dataTable value="#{MC.model}" var="Category">
+    <h:column>
+     #{Category.name}
+    </h:column>
+    <h:column>
+     <h:form>
+      <h:commandButton value="Remove Category" action="#{MC.RemoveCategory(Category)}"/>
+     </h:form>
+    </h:column>
+   </h:dataTable>
+
+   <h:form id="Add">
+    <p><h:message for="Name"/></p>
+    <h:inputText id="Name" value="#{MC.modelAddName}"/>
+    <h:commandButton value="Add Category" action="#{MC.AddCategory}"/>
+   </h:form>
+
+  </ui:define>
+ </ui:composition>
+</html>

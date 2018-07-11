@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="resources/css/projectAllocationCss.css" rel="stylesheet" type="text/css"/>
+    
+    <h:head>
+        <title>Allocate Project</title>
+    </h:head>
+        <h:body>
+      <ui:include src="../header_admin.xhtml" />
+        <div class="row">
+          <div class ="col-xs-12">
+              <h1>Administrator Page</h1>            
+          </div>
+        </div>        
+        <div class="row">
+            <div class="col-xs-12">
+                <h:form>
+                    <h:commandButton value="By Project Idea" action="#{allocationController.getAllApprovedProject()}">
+                        <f:ajax onevent="displayProjectSection" render="finalProjectForm"/>
+                    </h:commandButton>
+                    <h:commandButton value="By Student's Preferences" action="#{allocationController.getStudentWithShortList()}">
+                         <f:ajax onevent="displayStudentSection" render="studentSection studentSectionForm"/>
+                    </h:commandButton>
+                </h:form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" id="projectSection" style="display:none">
+                <h:form id="finalProjectForm">
+                    <h:dataTable border="1" value="#{allocationController.finalPorjectList}" var="project" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">                    
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="Project Title" />
+                            </f:facet>
+                            <h:outputText value="#{project.idea.title}"/>
+                        </h:column>                    
+                        <h:column>
+                            <f:facet name="header">Allocate to Student</f:facet>
+                            <h:commandButton value="Allocate" action="#{allocationController.allocateProject(project)}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+        </div>
+        <div class="row">
+            <div id="studentSection" class="col-xs-6" style="display:none">
+                <h:form id="studentSectionForm">
+                    <h:dataTable border="1" value="#{allocationController.students}" var="s" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputLabel value="Student ID"/>
+                            </f:facet>
+                            <h:outputText value="#{s.studentNumber}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputLabel value="Action"/>
+                            </f:facet>
+                            <h:commandButton value="Open" action="#{allocationController.studentShortlist(s)}">
+                                <f:ajax onevent="studentSecondSection" render="studentSectionProjectForm studentSection2Form"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+            <div id="studentSection2" class="col-xs-6" style="display:none">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h:form id="studentSection2Form">
+                            <h:panelGrid columns="3">
+                                <h:outputLabel value="Student ID"/>
+                                <h:outputLabel value=" : "/>
+                                <h:outputText value="#{allocationController.selectedStudent.studentNumber}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h3>Student's Project Shortlist</h3>
+                        <h:form id="studentSectionProjectForm">
+                            <h:dataTable border="1" value="#{allocationController.stdProject}" var="s" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Project ID"/>                        
+                                    </f:facet>
+                                    <h:outputText value="#{s.id}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Project Title"/>
+                                    </f:facet>
+                                    <h:outputText value="#{s.finalProject.idea.title}"/>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Project Status"/>
+                                    </f:facet>
+                                    <h:outputText value="Available" rendered="#{s.finalProject.idea.status == 'Approved'}"/> 
+                                    <h:outputText value="Unavailable" rendered="#{s.finalProject.idea.status == 'Allocated'}"/>                      
+                                </h:column>                        
+                                <h:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Acllocate"/>
+                                    </f:facet>
+                                    <h:commandButton value="Allocate" action="#{allocationController.allocateByStudentPreference(s.finalProject)}"/>
+                                </h:column>
+                            </h:dataTable>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+    <script type="text/javascript">
+        function displayProjectSection(){
+            $("#studentSection").hide();
+            $("#projectSection").show();
+        }
+        
+        function displayStudentSection(){
+            $("#projectSection").hide();
+            $("#studentSection").show();
+            $("#studentSection2").hide();
+        }
+        
+        function studentSecondSection(){
+            $("#projectSection").hide();
+            $("#studentSection").show();
+            $("#studentSection2").show();
+           
+        }
+    </script>
+</html>
+

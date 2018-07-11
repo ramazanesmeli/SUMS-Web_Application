@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <div class="row">
+        <ui:composition template="/WEB-INF/TemplateStudent.xhtml">
+
+
+            <ui:define name="Content">
+                <h:head>
+                <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+                </h:head>
+                <h:body>
+
+                    <div class="row">
+                    <div class="row"> <h1 class="text-center text-info"> VIEW YOUR PROJECT MARKINGS </h1></div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                            
+                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                            <h:form>
+                                <div class="row">
+                                    
+                                <h:outputLabel class=" text-success h3 col-md-4" value="SELECT YOUR NAME"/>
+                                <h:selectOneMenu class="btn btn-lg btn-default col-md-4 text-left" value="#{GradeUpdateManagement.selectedid}" onchange="submit()" valueChangeListener="#{GradeUpdateManagement.studentCodeChanged}">
+                                <f:selectItem itemLabel="Select a Student" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{GradeUpdateManagement.students}" var="c"  itemLabel="#{c.person.forername } #{c.person.surname} " itemValue="#{c.id}" ></f:selectItems>
+                                </h:selectOneMenu>
+
+                                </div>
+                            </h:form>
+                            <h:form>
+                                <div class="row">
+                                    <h:panelGroup rendered="#{GradeUpdateManagement.studentselected}">
+                                        <hr ></hr>
+                                        <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <h4 class="col-md-5 text-uppercase text-info">Project Title:</h4>  
+                                        </div>
+                                        
+                                        <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <h:outputLabel class="row h5 text-success" value="#{GradeUpdateManagement.student.finalProject.idea.title}" rendered="#{GradeUpdateManagement.student.finalProject ne null}"></h:outputLabel>  
+                                        <h:outputLabel class="row h5 text-danger text-uppercase" value="No project has been allocated to you" rendered="#{GradeUpdateManagement.student.finalProject eq null}" ></h:outputLabel>  
+                                        </div>
+                                        
+                                         <h:outputText value="&lt;br/&gt;" escape="false" />
+                                    </h:panelGroup>
+                                </div>   
+                                
+                                <h:outputText value="&lt;br/&gt;" escape="false" />       
+                                <h:panelGroup rendered="#{GradeUpdateManagement.studentselected and GradeUpdateManagement.grades.size() gt 0}">
+                                    
+                                    <div class="row">
+                                      
+                                       
+                                        <h:dataTable class="table table-responsive" value="#{GradeUpdateManagement.grades}" var="m" border="1">
+
+                                           <f:facet name="header" >
+                                           <div class="nav-tabs">
+                                           <h1 class="text-center text-info text-uppercase">Selected Student's Project Grades</h1>
+                                           </div>                                              
+                                           </f:facet>
+
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Student Name" />
+                                            </f:facet>
+                                            <h:outputText class=" text-success" value="#{m.description}" />
+                                            </h:column>
+                                            
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Project Supervisor" />
+                                            </f:facet>
+                                            <h:outputText class="text-success" rendered="#{GradeUpdateManagement.ap.staffs.isSupervisor eq true}" value="#{GradeUpdateManagement.ap.staffs.person.forername} #{GradeUpdateManagement.ap.staffs.person.surname }"/>
+                                            </h:column>
+                    
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Project Unit" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.projectunit}" class="text-success" />
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Overall Grade" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.overallmarks}" class="text-success" />
+                                             </h:column>
+                                            
+                                             <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Prize Nomination" />
+                                            </f:facet>
+                                            <h:outputText class="text-success" value="#{m.prize}" />
+                                            </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="General Comments" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.generalcomments}" class="text-success"/>
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Graded On" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.activeDate}" class="text-success"/>                                         
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Graded By" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.gradedby}" class="text-success"/>
+                                             </h:column>
+
+                                           
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Category Marks" />
+                                            </f:facet>
+                                            <h:commandButton  class='btn-lg btn-primary' value="View" action="#{GradeUpdateManagement.selectGrade(m)}">
+                                            </h:commandButton>
+                                            </h:column>
+                                            
+                                            </h:dataTable>
+                                        </div>
+                                </h:panelGroup>
+                                
+                                <h:panelGroup rendered="#{GradeUpdateManagement.studentselected and GradeUpdateManagement.grades.size() lt 1}" >
+                                    <hr ></hr>
+                                    <h1 class="text-danger text-center text-uppercase"> Your Project has not been marked yet!! </h1>
+                                </h:panelGroup>
+                                
+                            </h:form> 
+                            
+                            <h:outputText value="&lt;br/&gt;" escape="false" />
+                            <h:form enctype="multipart/form-data" id="projectmarkinglist">
+                                <h:panelGroup rendered="#{GradeUpdateManagement.gradeselected}">
+                                    
+                                        <h:dataTable class="table table-responsive" value="#{GradeUpdateManagement.grades}" var="m" border="1">
+
+                                           <f:facet name="header" >
+                                           <div class="nav-tabs">
+                                           <h1 class="text-center text-info text-uppercase">Project Category Marks</h1>
+                                           </div>                                              
+                                           </f:facet>
+
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Project Context, Aims and Objectives" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.projectcontext}" class="text-success" />
+                                            </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Literature Review" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.literature}" class="text-success"/>
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Methodological Approach" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.methodological}" class="text-success"/>
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Specification and Discussion of the requirements" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.specification}" class="text-success"/>
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Analysis and Design" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.analysis}" class="text-success"/>                                         
+                                             </h:column>
+                                            
+                                             <h:column>
+                                             <f:facet name="header">
+                                             <h:outputText class="text-info" value="Implementation" />
+                                             </f:facet>
+                                             <h:outputText value="#{m.implementation}" class="text-success"/>
+                                             </h:column> 
+                                            
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Verification and Validation" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.verification}" class="text-success"/>
+                                            </h:column>   
+                                          
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Evaluation" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.evaluation}" class="text-success"/>
+                                            </h:column>
+                                            
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Project Planning and Management" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.planning}" class="text-success"/>
+                                            </h:column>
+                                            
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Final Artefact" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.finalartefact}" class="text-success"/>
+                                            </h:column>   
+                                            
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Summary, Conclusion and Recommendations" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.summary}" class="text-success"/>
+                                            </h:column>
+                                            
+                                            <h:column>
+                                            <f:facet name="header">
+                                            <h:outputText class="text-info" value="Structure and Presentation" />
+                                            </f:facet>
+                                            <h:outputText value="#{m.structure}" class="text-success"/>
+                                            </h:column>   
+                                            
+                                        </h:dataTable>
+                                
+                                </h:panelGroup>
+                            </h:form>
+                            
+                            
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                </h:body>
+            </ui:define></ui:composition></div>
+</html>
+

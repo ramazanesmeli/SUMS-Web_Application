@@ -1,0 +1,512 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <div class="row">
+        <ui:composition template="/WEB-INF/Template.xhtml">
+
+            <ui:define name="Content">
+                <h:head>
+                    <meta charset="utf-8"></meta>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+                    <script src="../resources/js/jquery.datetimepicker.full.min.js" type="text/javascript"></script> 
+                    <link href="../resources/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css"/>
+                </h:head>
+                
+                <h:body>
+
+                    <div class="row">
+                    <div class="row"> <h1 class="text-center text-info"> PROJECT MARKING MANAGEMENT PAGE</h1></div><div class="col-md-2"></div><div class="col-md-8">
+                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                                        
+                            <h:form  id='form1'>
+                            <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-3"> <h:outputLabel class=" text-success h3" value="SELECT A SUPERVISOR"></h:outputLabel></div>
+                            
+                            <h:selectOneMenu class="btn btn-lg btn-default col-md-4" value="#{projectMarkingManagement.selectedid}" onchange="submit()" valueChangeListener="#{projectMarkingManagement.staffCodeChanged}">
+                                
+                            <f:selectItem itemLabel="Select a Supervisor" itemValue="#{-1}" noSelectionOption="true" />
+                            <f:selectItems value="#{projectMarkingManagement.allstaff}" var="c" itemLabel="#{c.person.forername } #{c.person.surname} " itemValue="#{c.id}" > </f:selectItems>
+                            
+                            </h:selectOneMenu>
+                            </div>
+                            </h:form>                            
+                            <h:outputText value="&lt;br/&gt;" escape="false" />
+
+                            <c:if test="#{projectMarkingManagement.selectedstaff.finalProject.size()>0 and projectMarkingManagement.selectedid ne -1}">
+                                <h:form  id='form2'>
+                                    <h:panelGroup id='assignedprojects'>
+                                    <div class="row">
+                                    <h:dataTable class="table table-responsive" value="#{ projectMarkingManagement.selectedstaff.finalProject}" var="m" border="2">                                       
+                                    <f:facet name="header"><h1 class="text-center text-info">PROJECTS THAT ARE ASSIGNED TO THIS SUPERVISOR</h1></f:facet>
+                                    
+                                    <h:column>
+                                    <f:facet name="header"><h:outputText class="text-info" value="PROJECT TITLE" /></f:facet>
+                                    <h:outputText value=" #{m.idea.title}" class="text-success"/>
+                                    </h:column>
+                                    
+                                    <h:column>
+                                    <f:facet name="header"><h:outputText class="text-info" value="GRADING STATUS" /></f:facet>
+                                    <h:commandButton id="gradingstatus" class='btn btn-lg btn-success btn-group-justified' value="VIEW GRADING STATUS" action="#{projectMarkingManagement.selectedProject(m)}"  >
+                                    </h:commandButton>
+                                    </h:column>
+                                    
+                                    </h:dataTable>
+                                    </div>
+                                    </h:panelGroup>
+
+                                </h:form>
+                            </c:if>
+                            
+                            <h:panelGroup id='selectingprojectreminder' rendered="#{projectMarkingManagement.selectedid eq -1}">
+                                <div class="row">
+                                <div class="col-md-4"></div><div class="col-md-5"><h1 class="text-danger text-center"> PLEASE SELECT A SUPERVISOR!!</h1></div>
+                                </div>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup id='noprojectassignedreminder' rendered="#{projectMarkingManagement.selectedstaff.finalProject.size() lt 1 and projectMarkingManagement.selectedid ne -1 }">
+                                <div class="row">
+                                <div class="col-md-4"></div><div class="col-md-5"><h1 class="text-danger text-uppercase">  No Project has been assigned for this Supervisor!!</h1></div>
+                                </div>
+                            </h:panelGroup>
+                            
+                            <h:form  id='form3'>
+                                <c:if test="#{projectMarkingManagement.grades.size()>0}">
+
+                                    <h:panelGroup id='projectmarking'>
+                                        <div class="row"> 
+                                            <h:dataTable class="table table-responsive" value="#{projectMarkingManagement.grades}" var="mils" border="2" id="projectmarkingtable"> 
+                                                
+                                                <f:facet name="header" >
+                                                <div class="nav-tabs">
+                                                <h1 class="text-center text-info text-uppercase ">Selected Project Grades</h1>
+                                                </div>
+                                                </f:facet>
+                                                
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="Student Name" />
+                                                    </f:facet>
+                                                    <h:outputText class="text-success" value="#{mils.description}" />
+                                                </h:column>
+                                                
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="Project Unit" />
+                                                    </f:facet>
+                                                    <h:outputText class="text-success" value="#{mils.projectunit}" />
+                                                </h:column> 
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="Overall Grade" />
+                                                    </f:facet>
+                                                    <h:outputText class="text-success" value="#{mils.overallmarks}" />
+                                                </h:column>  
+                                                
+                                                 <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="Prize Nomination" />
+                                                    </f:facet>
+                                                     <h:outputText class="text-success" value="#{mils.prize}"/>
+                                                </h:column> 
+                                                
+                                                 <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="General Comments" />
+                                                    </f:facet>
+                                                    <h:outputText class="text-success" value="#{mils.generalcomments}" />
+                                                </h:column>   
+                                              
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="Graded On" />
+                                                    </f:facet>
+                                                    <h:outputText class="text-success" value="#{mils.activeDate}">
+                                                <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm"  />
+                                                    </h:outputText>
+                                                </h:column>
+                                                
+                                                 <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="text-info text-uppercase" value="Graded By" />
+                                                    </f:facet>
+                                                    <h:outputText class="text-success" value="#{mils.gradedby}">                                             
+                                                    </h:outputText>
+                                                </h:column>
+
+                                                <h:column>
+                                                    <f:facet name="header">
+                                                    <h:outputText class="btn-group-lg" value="Make Changes" />
+                                                    </f:facet>    
+                                                    
+                                                    <h:commandButton id="editbutton" class='btn btn-sm btn-primary btn-group-justified' value="EDIT" action="#{projectMarkingManagement.selectGrade(mils)}">
+                                                        <f:ajax execute="@form" render="form4 form5" ></f:ajax>
+                                                    </h:commandButton>  
+                                                    
+                                                    <div class="row"></div>
+                                                    <h:commandButton id="deletebutton" class="btn btn-sm btn-danger btn-group-justified" value="DELETE" action="#{projectMarkingManagement.deleteGrade(mils)}" onclick="return confirm(' Are You Sure to Delete Grade: #{projectMarkingManagement.selectedgrade.description}')" > 
+                                                        <f:ajax execute="@form" render="form4 form3" ></f:ajax>
+                                                    </h:commandButton>
+                                                </h:column>
+
+                                            </h:dataTable> 
+                                        </div>
+                                    </h:panelGroup> 
+                                </c:if> 
+                                
+                                <h:panelGroup  rendered="#{projectMarkingManagement.grades.size() lt 1 and projectMarkingManagement.projectselected}">
+                                    <div class="row">
+                                    <h1 class="text-danger text-center text-uppercase"> This Project has not been Marked Yet!!</h1>
+                                    </div>
+                                </h:panelGroup>
+                                
+                                <c:if test="#{projectMarkingManagement.projectselected}">
+                                    <h:panelGroup>
+                                        <div class="row"> 
+                                        <h:dataTable class="table table-responsive "  border="2">
+                                            
+                                        <f:facet name="header">
+                                        <h:commandButton id="addingnewgrade" class="btn btn-lg btn-danger btn-group-justified text-uppercase" action="#{projectMarkingManagement.newGradeselected()}" value="Review the Project (Please Note: You can review (mark) the project more than once)">
+                                        <f:ajax execute="@form" render="form5 form4" ></f:ajax>
+                                        </h:commandButton>
+                                        </f:facet>
+                                            
+                                        </h:dataTable>
+                                        </div>
+                                    </h:panelGroup>
+                                </c:if>
+
+                            </h:form>
+
+                            <h:form  id='form4' >
+
+                                <h:panelGroup id='editinggrade' rendered="#{projectMarkingManagement.gradeselected}">
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4"> <h:outputLabel id="editstudentname" class='text-uppercase text-info' value="Student Name"></h:outputLabel></div>
+                                        <div class="row"> 
+                                        <div class="col-md-3"><h:inputText id="changestudentname" value="#{projectMarkingManagement.selectedgrade.description}" label="Changestudentname" required="true"></h:inputText>
+                                        </div>
+                                        </div> 
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4"> <h:outputLabel id="editprojectunit" class='text-uppercase text-info' value="Project Unit"></h:outputLabel></div>
+                                        <div class="row"> 
+                                        <div class="col-md-3"><h:inputText id="changeprojectunit" value="#{projectMarkingManagement.selectedgrade.projectunit}" label="Changeprojectunit" required="true"></h:inputText>
+                                        </div>
+                                        </div> 
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4"> <h:outputLabel id="editoverallmarks" class='text-uppercase text-info' value="Overall Grade"></h:outputLabel></div>
+                                        <div class="row"> 
+                                        <div class="col-md-3"><h:inputText id="changeoverallmarks" value="#{projectMarkingManagement.selectedgrade.overallmarks}" label="Changeoverallmarks" required="true"></h:inputText>
+                                        </div>
+                                        </div> 
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4"> <h:outputLabel id="editgeneralcomments" class='text-uppercase text-info' value="General Comments"></h:outputLabel></div>
+                                        <div class="row"> 
+                                        <div class="col-md-3"><h:inputText id="changegeneralcomments" value="#{projectMarkingManagement.selectedgrade.generalcomments}" label="Changegeneralcomments" required="true"></h:inputText>
+                                        </div>
+                                        </div> 
+                                    </div>
+                                    
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4"> <h:outputLabel id="editgradedby" class='text-uppercase text-info' value="Graded By"></h:outputLabel> </div>
+                                        <div class="row"> 
+                                        <div class="col-md-3"><h:inputText id="changegradeby" value="#{projectMarkingManagement.selectedgrade.gradedby}" label="Changegradeby" required="true"></h:inputText>
+                                        </div>
+                                        </div> 
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4"><h:outputLabel id='editgradedon' class="text-uppercase text-info" value="Graded On"></h:outputLabel> </div>
+                                        <div class="row">
+                                        <div class="col-md-4" >
+                                            
+                                        <h:inputText value="#{projectMarkingManagement.selectedgrade.activeDate}"  id="changegradedon" required="true" label="Changegradedon" >
+                                        <f:convertDateTime pattern="dd-MM-yyyy HH:mm"  />
+                                        </h:inputText>
+                                            
+                                        </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                                    
+                                    <h:panelGroup rendered="#{projectMarkingManagement.gradeselected}">
+                                        <div class="row">
+                                        <div class="col-md-3">
+                                        
+                                        <h:commandButton id="updatebutton" class="btn btn-lg btn-success btn-group-justified" value="Update" action="#{projectMarkingManagement.updateGrade()}"> 
+                                        <f:ajax execute="form4:editgrade" render="form3 form4 form5" ></f:ajax>
+                                        </h:commandButton>
+                                            
+                                        </div>
+                                        <div class="col-md-3">
+                                        </div>
+                                        </div>
+                                    </h:panelGroup> 
+                                </h:panelGroup>
+          
+                            </h:form>
+                             
+                            <h:form  id='form5'>
+                                <h:panelGroup id='newgrade' rendered="#{projectMarkingManagement.newgradeselected}">                                
+                                  
+                                 <div class="row">
+                                 <div class="col-md-3"> <h:outputLabel   class='text-uppercase text-info' value="Student Name"></h:outputLabel></div>
+                                 <div class="col-md-3"><h:inputText id="studentname" label="Studentname" value="#{projectMarkingManagement.newgrade.description}" required="true" >
+                                 <f:validateLength minimum="1" maximum="30" />
+                                 </h:inputText> </div></div>
+                                    
+                                 <div class="row">
+                                 <div class="col-md-3"> <h:outputLabel   class='text-uppercase text-info' value="Project Unit"></h:outputLabel></div>
+                                 <div class="col-md-3"><h:inputText id="projectunit" label="Projectunit" value="#{projectMarkingManagement.newgrade.projectunit}" required="true" >
+                                 <f:validateLength minimum="1" maximum="6" />
+                                 </h:inputText> </div></div>
+                                    
+                                 <div class="row">
+                                 <div class="col-md-3"> <h:outputLabel   class='text-uppercase text-info' value="Prize Nomination"></h:outputLabel></div>
+                                 <div class="col-md-3"><h:inputText id="prize" label="Prize" value="#{projectMarkingManagement.newgrade.prize}" required="true" >
+                                 <f:validateLength minimum="1" maximum="20" />
+                                 </h:inputText> </div></div>    
+   
+                                 <div class="row">
+                                 <div class="col-md-3"> <h:outputLabel   class='text-uppercase text-info' value="Graded By"></h:outputLabel></div>
+                                 <div class="col-md-3"><h:inputText id="gradedby" label="Gradedby" value="#{projectMarkingManagement.newgrade.gradedby}" required="true" >
+                                 <f:validateLength minimum="1" maximum="30" />
+                                 </h:inputText> </div></div>
+                                    
+                                 <div class="row">
+                                 <div class="col-md-3"><h:outputLabel class="text-uppercase text-info" value="Graded On"></h:outputLabel> </div>
+                                 <div class="col-md-3">
+                                 <h:inputText value="#{projectMarkingManagement.newgrade.activeDate}" label="Gradedon" id="gradedon" required="true">
+                                 <f:convertDateTime pattern="dd-MM-yyyy HH:mm"  />
+                                 </h:inputText></div></div>
+
+                                 <h:outputText value="&lt;br/&gt;" escape="false" />
+                                 <h:outputText value="&lt;br/&gt;" escape="false" />
+                                                        
+                                 <h:panelGroup id='markscheme'>
+                                        <div class="row"> 
+                                            <h:dataTable class="table table-responsive" value="#{dataTableManagement.dataTableBusiness}" var="m" border="2" id="markschemetable">
+
+                                    <f:facet name="header" >
+                                    <div class="nav-tabs">
+                                    <h1 class="text-center text-info ">Final Year Engineering Project Marking Scheme</h1>
+                                    </div>                                              
+                                    </f:facet>
+                                                
+                                    <h:column>          
+                                    <f:facet name="header">CATEGORY</f:facet>
+                                    <h:outputText value="#{m.category}"/>
+                                    </h:column>
+                                                
+                                    <h:column>
+                                    <f:facet name="header">WEIGHT</f:facet>
+                                    <h:outputText value="#{m.weight}"/>
+                                    </h:column>
+                                                
+                                    <h:column>
+                                    <f:facet name="header">0-9</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="5 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark1}"/>
+                                    </h:column>
+                                                
+                                    <h:column>
+                                    <f:facet name="header">10-19</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="15 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark2}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">20-29</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="25 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark3}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">30-39</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="35 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark4}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">40-49</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="45 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark5}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">50-59</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="55 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark6}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">60-69</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="65 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark7}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">70-79</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="75 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark8}"/>
+                                    </h:column> 
+                                    
+                                    <h:column>
+                                    <f:facet name="header">80-89</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="85 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark9}"/>
+                                    </h:column> 
+                                                
+                                    <h:column>
+                                    <f:facet name="header">90-100</f:facet>
+                                    <h:selectOneRadio> <f:selectItem itemLabel="95 Marks"/></h:selectOneRadio><h:outputText value="#{m.mark10}"/>
+                                    </h:column>    
+
+                                    </h:dataTable> 
+                                    </div>
+                                    </h:panelGroup> 
+                                    
+                                    <h:panelGrid style="margin-left: 35em; text-align: center;" id ="panel" columns="3" border="2" styleClass="mainTable" headerClass="tableHeader" rowClasses="tableRowEven,tableRowOdd">
+                                    <f:facet name="header">
+                                    <h:outputText style="font-size: 1.5em; font-weight: bold; margin-left: 6em; " value ="Calculate the total weighted marks"/>
+                                    </f:facet>  
+                                        
+                                    <h:panelGroup style="font-size: 1em; font-weight: bold">Category</h:panelGroup>
+                                    <h:panelGroup style="font-size: 1em; font-weight: bold">Weight</h:panelGroup>
+                                    <h:panelGroup style="font-size: 1em; font-weight: bold">Category Marks</h:panelGroup>   
+                                  
+                                    <h:panelGroup> Project's Context, Aims and Objectives </h:panelGroup>
+                                    <h:panelGroup> 2 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="projectcontext" label="Projectcontext" value="#{projectMarkingManagement.newgrade.projectcontext}" required="true" >
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>   
+    
+                                    <h:panelGroup>Literature Review</h:panelGroup>
+                                    <h:panelGroup> 2 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="literature" label="Literature" value="#{projectMarkingManagement.newgrade.literature}" required="true" >         
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+                                  
+                                    <h:panelGroup> Methodological Approach</h:panelGroup>  
+                                    <h:panelGroup> 1 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="methodological" label="Methodological" value="#{projectMarkingManagement.newgrade.methodological}" required="true" >         
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+     
+                                    <h:panelGroup> Specification and Discussion of the requirements </h:panelGroup>   
+                                    <h:panelGroup> 3 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="specification" label="Specification" value="#{projectMarkingManagement.newgrade.specification}" required="true" >     
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+     
+                                    <h:panelGroup> Analysis and Design</h:panelGroup>
+                                    <h:panelGroup> 3 </h:panelGroup> 
+                                    <h:panelGroup> <h:inputText id="analysis" label="Analysis" value="#{projectMarkingManagement.newgrade.analysis}" required="true" >            
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+    
+                                    <h:panelGroup> Implementation </h:panelGroup>  
+                                    <h:panelGroup> 3 </h:panelGroup>  
+                                    <h:panelGroup> <h:inputText id="implementation" label="Implementation" value="#{projectMarkingManagement.newgrade.implementation}" required="true" >         
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+     
+                                    <h:panelGroup> Verification and Validation </h:panelGroup>   
+                                    <h:panelGroup> 1 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="verification" label="Verification" value="#{projectMarkingManagement.newgrade.verification}" required="true" >      
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup> 
+   
+                                    <h:panelGroup> Evaluation </h:panelGroup>   
+                                    <h:panelGroup> 2 </h:panelGroup>  
+                                    <h:panelGroup> <h:inputText id="evaluation" label="Evaluation" value="#{projectMarkingManagement.newgrade.evaluation}" required="true" >         
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>  
+    
+                                    <h:panelGroup> Project Planning and Management </h:panelGroup> 
+                                    <h:panelGroup> 1 </h:panelGroup>  
+                                    <h:panelGroup> <h:inputText id="planning" label="Planning" value="#{projectMarkingManagement.newgrade.planning}" required="true" >          
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>   
+   
+                                    <h:panelGroup> Final Artefact </h:panelGroup>
+                                    <h:panelGroup> 3 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="finalartefact" label="Finalartefact" value="#{projectMarkingManagement.newgrade.finalartefact}" required="true" >          
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+      
+                                    <h:panelGroup> Summary, Conclusion and Recommendations</h:panelGroup>  
+                                    <h:panelGroup> 2 </h:panelGroup>   
+                                    <h:panelGroup> <h:inputText id="summary" label="Summary" value="#{projectMarkingManagement.newgrade.summary}" required="true" >            
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup> 
+    
+                                    <h:panelGroup> Structure and Presentation </h:panelGroup>  
+                                    <h:panelGroup> 2 </h:panelGroup>
+                                    <h:panelGroup> <h:inputText id="structure" label="Structure" value="#{projectMarkingManagement.newgrade.structure}" required="true" >      
+                                    <f:validateLength minimum="1" maximum="3" /></h:inputText></h:panelGroup>
+       
+                                    </h:panelGrid>
+                                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                                    
+                                    <h:panelGroup id='Commentbox'>
+                                        <div class="row"> 
+                                            <h:dataTable  class="table table-responsive" var="m" border="2" id="commentbox">
+                                            
+                                                <h:column>   
+                                                <f:facet name="header">
+                                                <h3 class="text-center text-primary">General comments justifying the marks. In particular, stress areas of strength and weakness that do not necessarily match the categories above.</h3>
+                                                </f:facet>
+                                                    
+                                                <f:facet name="footer">
+                                                <h3 class="text-center text-primary">Overall Marks after calculating the weighted marks from each category</h3>
+                                                </f:facet>          
+                                                </h:column>
+                                               
+                                                
+                                                <h:column>
+                                                <f:facet name="header">
+                                                <h:inputTextarea class="btn-group-lg text-center" id="generalcomments" label="Generalcomments" value="#{projectMarkingManagement.newgrade.generalcomments}" required="true" rows="6" cols="82">
+                                                <f:validateLength minimum="1" maximum="100"/></h:inputTextarea>
+                                                </f:facet>
+                                                    
+                                                <f:facet name="footer">
+                                                <h:inputTextarea class="btn-group-lg text-center" id="overallmarks" label="Overallmarks" value="#{projectMarkingManagement.newgrade.overallmarks}" required="true" rows="4" cols="112">
+                                                <f:validateLength minimum="1" maximum="3" /> </h:inputTextarea>                                                                 
+                                                </f:facet>   
+                                                </h:column>
+                                                                                 
+                                            </h:dataTable>
+                                        </div>
+                                    </h:panelGroup>  
+                                    
+                                 
+                                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                                    <h:outputText value="&lt;br/&gt;" escape="false" />
+                                                                                                            
+                                    <div class=" row">
+                                    <div class="col-md-3">
+                                    <h:commandButton id="addsubmitbutton" class="btn btn-lg btn-primary btn-group-justified" value="Submit Marks" action="#{projectMarkingManagement.addGrade()}"  >                            
+                                    </h:commandButton>
+                                    </div>  
+                                    </div>
+                                   
+                                </h:panelGroup>
+                                
+                            </h:form>
+                       
+</div>  
+                    <div class="col-md-2"></div>
+                    </div>
+
+                </h:body>
+                <script>
+                    jQuery(document).ready(function ($) {
+                        'use strict';
+                        $('#form4\\:changegradedon, #form5\\:gradedon').datetimepicker({
+                            format: 'd-m-Y H:i'
+                        });
+
+                    });
+
+                </script>
+            </ui:define>
+        </ui:composition>       
+    </div>
+
+</html>
